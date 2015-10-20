@@ -6,7 +6,7 @@ import datetime
 # Local imports
 import sabre_exceptions
 
-class SabreDevStudio():
+class SabreDevStudio(object):
     def __init__(self, client_id, client_secret):
         self.id = client_id
         self.secret = client_secret

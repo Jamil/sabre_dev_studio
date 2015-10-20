@@ -1,7 +1,9 @@
 import unittest
 import json
+import sys
 
-from sabre_dev_studio import SabreDevStudio
+sys.path.append('..')
+import sabre_dev_studio
 
 '''
 Tests for the SabreDevStudio base class
@@ -13,7 +15,7 @@ Requires config.json in the same directory for API authentication
 }
 
 '''
-class TestBaseSabreDevStudio(unittest.TestCase):
+class TestBasicSabreDevStudio(unittest.TestCase):
     def read_config(self):
         raw_data = open('config.json').read()
 
@@ -29,7 +31,7 @@ class TestBaseSabreDevStudio(unittest.TestCase):
         self.client_id, self.client_secret = self.read_config()
 
     def test_auth(self):
-        sds = SabreDevStudio(self.client_id, self.client_secret)
+        sds = sabre_dev_studio.SabreDevStudio(self.client_id, self.client_secret)
         sds.authorize()
 
 if __name__ == '__main__':
