@@ -13,8 +13,9 @@ class SabreDevStudio(object):
         self.client_id = None
         self.client_secret = None
         self.token = None
+        self.token_expiry = None
 
-        self.host = 'https://api.test.sabre.com/v2'
+        self.host = 'https://api.test.sabre.com'
 
     def make_endpoint(self, endpoint):
         return self.host + endpoint
@@ -23,23 +24,50 @@ class SabreDevStudio(object):
         self.client_id = client_id
         self.client_secret = client_secret 
 
-    def set_token(self, token):
-        self.token = token
-
-    def request(self, endpoint):
+    def request(self, method, endpoint, payload=None):
         now = datetime.datetime.now()
 
         # Check for token
         if not self.token:
-            raise NotAuthorizedError
+            raise sabre_exceptions.NotAuthorizedError
 
-        if self.token_expiry < now:
+        if not self.token_expiry:
+            pass
+        elif self.token_expiry < now:
             # Authenticate again
             self.authenticate()
 
+        endpoint = self.make_endpoint(endpoint)
+        auth_header = {
+            "Authorization": "Bearer" + self.token
+        }
+
+        if method == 'GET':
+            resp = requests.get(endpoint, headers=auth_header)
+            self.verify_response(resp)
+            return resp
+        elif method == 'PUT':
+            resp = requests.put(endpoint, headers=auth_header, data=payload)
+            self.verify_response(resp)
+            return resp
+        elif method == 'PATCH':
+            resp = requests.put(endpoint, headers=auth_header, data=payload)
+            self.verify_response(resp)
+            return resp
+        elif method == 'POST':
+            resp = requests.post(endpoint, headers=auth_header, data=payload)
+            self.verify_response(resp)
+            return resp
+        elif method == 'DELETE':
+            resp = requests.delete(endpoint, headers=auth_header)
+            self.verify_response(resp)
+            return resp
+        else:
+            raise UnsupportedMethodError
+
     def authenticate(self):
         if not self.client_id or not self.client_secret:
-            raise NoCredentialsProvided
+            raise sabre_exceptions.NoCredentialsProvided
 
         token_resp = self.get_token_data(self.client_id, self.client_secret)
         self.verify_response(token_resp)
@@ -63,7 +91,7 @@ class SabreDevStudio(object):
             'grant_type': 'client_credentials'
         }
 
-        data = requests.post(self.make_endpoint('/api/token/'),
+        data = requests.post(self.make_endpoint('/v2/auth/token/'),
                              headers=headers,
                              data=payload)
 
