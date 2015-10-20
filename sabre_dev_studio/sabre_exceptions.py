@@ -1,3 +1,14 @@
+# Authentication requested, but no credentials (client ID, client secret) provided
+class NoCredentialsProvided(Exception):
+    pass
+
+# Did not request token
+class NotAuthorizedError(Exception):
+    pass
+
+class UnsupportedMethodError(Exception):
+    pass
+
 # Base API Exception
 class SabreDevStudioException(Exception):
     pass

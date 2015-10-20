@@ -7,12 +7,41 @@ import datetime
 import sabre_exceptions
 
 class SabreDevStudio(object):
-    def __init__(self, client_id, client_secret):
-        self.id = client_id
-        self.secret = client_secret
+    def __init__(self):
+        self.auth_headers = None
 
-    def authorize(self):
-        token_resp = self.get_token_data(self.id, self.secret)
+        self.client_id = None
+        self.client_secret = None
+        self.token = None
+
+        self.host = 'https://api.test.sabre.com/v2'
+
+    def make_endpoint(self, endpoint):
+        return self.host + endpoint
+
+    def set_credentials(self, client_id, client_secret):
+        self.client_id = client_id
+        self.client_secret = client_secret 
+
+    def set_token(self, token):
+        self.token = token
+
+    def request(self, endpoint):
+        now = datetime.datetime.now()
+
+        # Check for token
+        if not self.token:
+            raise NotAuthorizedError
+
+        if self.token_expiry < now:
+            # Authenticate again
+            self.authenticate()
+
+    def authenticate(self):
+        if not self.client_id or not self.client_secret:
+            raise NoCredentialsProvided
+
+        token_resp = self.get_token_data(self.client_id, self.client_secret)
         self.verify_response(token_resp)
 
         token_json = token_resp.json()
@@ -34,7 +63,7 @@ class SabreDevStudio(object):
             'grant_type': 'client_credentials'
         }
 
-        data = requests.post('https://api.test.sabre.com/v2/auth/token',
+        data = requests.post(self.make_endpoint('/api/token/'),
                              headers=headers,
                              data=payload)
 
@@ -47,7 +76,7 @@ class SabreDevStudio(object):
         elif resp.status_code == 400:
             raise sabre_exceptions.SabreErrorBadRequest
         elif resp.status_code == 401:
-            raise sabre_exceptions.SabreErrorUnauthorized
+            raise sabre_exceptions.SabreErrorUnauthenticated
         elif resp.status_code == 403:
             raise sabre_exceptions.SabreErrorForbidden
         elif resp.status_code == 404:

@@ -31,8 +31,19 @@ class TestBasicSabreDevStudio(unittest.TestCase):
         self.client_id, self.client_secret = self.read_config()
 
     def test_auth(self):
-        sds = sabre_dev_studio.SabreDevStudio(self.client_id, self.client_secret)
-        sds.authorize()
+        sds = sabre_dev_studio.SabreDevStudio()
+        sds.set_credentials(self.client_id, self.client_secret)
+        sds.authenticate()
+
+    def test_token_set(self):
+        sds = sabre_dev_studio.SabreDevStudio()
+        sds.set_credentials(self.client_id, self.client_secret)
+        sds.authenticate()
+
+        token = sds.token
+        sds2 = sabre_dev_studio.SabreDevStudio()
+        sds2.token = token
+        sds2.authenticate()
 
 if __name__ == '__main__':
     unittest.main()
