@@ -112,7 +112,7 @@ class SabreDevStudio(object):
             raise UnsupportedMethodError
 
         self.verify_response(resp)
-        resp_data = process_response(resp.json())
+        resp_data = self.process_response(resp.json())
         return resp_data
 
     # verify_response
@@ -148,15 +148,25 @@ class SabreDevStudio(object):
     # Converts a dictionary into a python object with Pythonic names
     def process_response(self, json_obj):
         def convert_keys(d):
+            if isinstance(d, list):
+                for elem in d:
+                    convert_keys(elem)
+                return
+            elif not isinstance(d, dict):
+                return
+
             for key in d.keys():
                 s = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', key)
                 s = re.sub('([a-z0-9])([A-Z])', r'\1_\2', s).lower()
+                s = re.sub('[^0-9a-zA-Z]+', '_', s)
+                s = re.sub('^[0-9]', '', s)
+                
+                s = s.replace(' ', '_')
                 d[s] = d[key]
                 if s != key:
                     del d[key]
 
-                if isinstance(d[s], dict):
-                    convert_keys(d[s])
+                convert_keys(d[s])
             
         convert_keys(json_obj)
 

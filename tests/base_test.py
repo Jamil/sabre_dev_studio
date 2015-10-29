@@ -82,7 +82,24 @@ class TestBasicSabreDevStudio(unittest.TestCase):
         with self.assertRaises(sabre_exceptions.SabreErrorNotFound):
             resp = sds.request('GET', '/v1/lists/supported/cities/Toronto/airports/')
 
-        
+    def test_process_response(self):
+        raw_data = open('sample_json.json').read()
+        self.assertIsNotNone(raw_data)
+
+        data = json.loads(raw_data)
+        self.assertIsNotNone(data)
+
+        sds = sabre_dev_studio.SabreDevStudio()
+        resp = sds.process_response(data)
+
+        self.assertTrue(hasattr(resp, 'colors_array'))
+        self.assertFalse(hasattr(resp, 'colorsArray'))
+
+        self.assertEqual(len(resp.colors_array), 7)
+
+        self.assertTrue(hasattr(resp.colors_array[1], 'color_name'))
+        self.assertFalse(hasattr(resp.colors_array[1], 'colorName'))
+        self.assertEqual(resp.colors_array[0].color_name, 'red')
 
 
 if __name__ == '__main__':
