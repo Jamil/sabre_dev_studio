@@ -1,3 +1,3 @@
 sabre_endpoints = {
-    'instaflights': ''
+    'instaflights': '/v1/shop/flights'
 }
