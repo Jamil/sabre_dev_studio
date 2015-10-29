@@ -11,7 +11,24 @@ class UnsupportedMethodError(Exception):
 
 # Base API Exception
 class SabreDevStudioException(Exception):
-    pass
+    def __init__(self, e):
+        message = e.get('message')
+        super(SabreDevStudioException, self).__init__(message)
+
+        self.message = message
+        self.status = e.get('status')
+        self.error_code = e.get('errorCode')
+        self.e_type = e.get('type')
+        self.tstamp = e.get('timeStamp')
+
+    def __unicode__(self):
+        str += 'Message:\t' + self.message + '\n'
+        str += 'Status:\t' + self.status + '\n'
+        str += 'Error Code:\t' + self.error_code + '\n'
+        str += 'Type:\t' + self.type + '\n'
+        str += 'Timestamp:\t' + self.timestamp + '\n'
+        return str
+
 
 # 400
 class SabreErrorBadRequest(SabreDevStudioException):

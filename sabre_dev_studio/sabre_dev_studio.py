@@ -7,7 +7,7 @@ import re
 
 # Local imports
 import sabre_exceptions
-import sabre_endpoints
+from sabre_endpoints import sabre_endpoints
 
 
 class SabreDevStudio(object):
@@ -99,7 +99,7 @@ class SabreDevStudio(object):
         }
 
         if method == 'GET':
-            resp = requests.get(endpoint, headers=auth_header)
+            resp = requests.get(endpoint, headers=auth_header, params=payload)
         elif method == 'PUT':
             resp = requests.put(endpoint, headers=auth_header, data=payload)
         elif method == 'PATCH':
@@ -123,25 +123,27 @@ class SabreDevStudio(object):
         if resp.status_code >= 200 and resp.status_code < 299:
             pass
 
-        elif resp.status_code == 400:
-            raise sabre_exceptions.SabreErrorBadRequest
-        elif resp.status_code == 401:
-            raise sabre_exceptions.SabreErrorUnauthenticated
-        elif resp.status_code == 403:
-            raise sabre_exceptions.SabreErrorForbidden
-        elif resp.status_code == 404:
-            raise sabre_exceptions.SabreErrorNotFound
-        elif resp.status_code == 406:
-            raise sabre_exceptions.SabreErrorNotAcceptable
-        elif resp.status_code == 429:
-            raise sabre_exceptions.SabreErrorRateLimited
+        else:
+            e = resp.json()
+            if resp.status_code == 400:
+                raise sabre_exceptions.SabreErrorBadRequest(resp.json())
+            elif resp.status_code == 401:
+                raise sabre_exceptions.SabreErrorUnauthenticated(resp.json())
+            elif resp.status_code == 403:
+                raise sabre_exceptions.SabreErrorForbidden(resp.json())
+            elif resp.status_code == 404:
+                raise sabre_exceptions.SabreErrorNotFound(resp.json())
+            elif resp.status_code == 406:
+                raise sabre_exceptions.SabreErrorNotAcceptable(resp.json())
+            elif resp.status_code == 429:
+                raise sabre_exceptions.SabreErrorRateLimited(resp.json())
 
-        elif resp.status_code == 500:
-            raise sabre_exceptions.SabreInternalServerError
-        elif resp.status_code == 503:
-            raise sabre_exceptions.SabreErrorServiceUnavailable
-        elif resp.status_code == 504:
-            raise sabre_exceptions.SabreErrorGatewayTimeout
+            elif resp.status_code == 500:
+                raise sabre_exceptions.SabreInternalServerError
+            elif resp.status_code == 503:
+                raise sabre_exceptions.SabreErrorServiceUnavailable
+            elif resp.status_code == 504:
+                raise sabre_exceptions.SabreErrorGatewayTimeout
         
     # process_response
     # JSON Dictionary -> ResponseData
@@ -180,5 +182,7 @@ class SabreDevStudio(object):
     # Dictionary -> ResponseData
     # Executes a request to Sabre's instaflights endpoint with the options specified
     def instaflights(self, options):
-        pass
+        resp = self.request('GET', sabre_endpoints['instaflights'], options)
+        return resp
+        
         
