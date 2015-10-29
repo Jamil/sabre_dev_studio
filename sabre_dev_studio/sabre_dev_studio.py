@@ -140,7 +140,7 @@ class SabreDevStudio(object):
             raise sabre_exceptions.SabreInternalServerError
         elif resp.status_code == 503:
             raise sabre_exceptions.SabreErrorServiceUnavailable
-        elif resp.status_code == 503:
+        elif resp.status_code == 504:
             raise sabre_exceptions.SabreErrorGatewayTimeout
         
     # process_response
