@@ -1,0 +1,3 @@
+sabre_endpoints = {
+    'instaflights': ''
+}

@@ -1,1 +1,0 @@
-from .instaflights import Instaflights

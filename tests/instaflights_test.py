@@ -3,10 +3,9 @@ import json
 import sys
 
 sys.path.append('..')
-import sabre_dev_studio.air.instaflights as instaflights
+import sabre_dev_studio
 
 '''
-tests for the sabredevstudio base class
 requires config.json in the same directory for api authentication
 
 {
@@ -16,7 +15,7 @@ requires config.json in the same directory for api authentication
 
 '''
 class TestBasicInstaflights(unittest.TestCase):
-    def read_config(self):
+    def prepare_client(self):
         raw_data = open('config.json').read()
 
         data = json.loads(raw_data)
@@ -24,11 +23,12 @@ class TestBasicInstaflights(unittest.TestCase):
         client_secret = data['sabre_client_secret']
         client_id = data['sabre_client_id']
 
-        return (client_id, client_secret)
+        sds = SabreDevStudio()
+        sds.set_credentials(client_id, client_secret)
+        sds.authenticate()
 
     def setUp(self):
-        # read from config
-        self.client_id, self.client_secret = self.read_config()
+        self.prepare_client()
 
     def test_init(self):
         instaf = instaflights.Instaflights(self.client_id, self.client_secret)
