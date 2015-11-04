@@ -210,7 +210,7 @@ class SabreDevStudio(object):
     # datetime -> str
     # Converts a Python date object to a Sabre-compatible date string
     def convert_date(self, date):
-        return tomorrow.strftime('%Y-%m-%d')
+        return date.strftime('%Y-%m-%d')
 
     # instaflights
     # Dictionary -> ResponseData

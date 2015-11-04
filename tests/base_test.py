@@ -83,7 +83,7 @@ class TestBasicSabreDevStudio(unittest.TestCase):
             resp = sds.request('GET', '/v1/lists/supported/cities/Toronto/airports/')
 
     def test_get_json(self):
-        sds = sabre_dev_studio.SabreDevStudio()
+        sds = sabre_dev_studio.SabreDevStudio(return_obj=False)
         sds.set_credentials(self.client_id, self.client_secret)
         sds.authenticate()
 
@@ -140,7 +140,7 @@ class TestBasicSabreDevStudio(unittest.TestCase):
 
     def test_convert_date(self):
         now = datetime.datetime.now()
-        string_representation = now.stftime('%Y-%m-%d')
+        string_representation = now.strftime('%Y-%m-%d')
 
         sds = sabre_dev_studio.SabreDevStudio()
         self.assertEqual(sds.convert_date(now), string_representation)
