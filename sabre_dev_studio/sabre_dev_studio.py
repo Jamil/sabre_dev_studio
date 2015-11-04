@@ -192,6 +192,12 @@ class SabreDevStudio(object):
 
         return obj
 
+    # convert_date
+    # datetime -> str
+    # Converts a Python date object to a Sabre-compatible date string
+    def convert_date(self, date):
+        return tomorrow.strftime('%Y-%m-%d')
+
     # instaflights
     # Dictionary -> ResponseData
     # Executes a request to Sabre's instaflights endpoint with the options specified

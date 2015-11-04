@@ -101,6 +101,12 @@ class TestBasicSabreDevStudio(unittest.TestCase):
         self.assertFalse(hasattr(resp.colors_array[1], 'colorName'))
         self.assertEqual(resp.colors_array[0].color_name, 'red')
 
+    def test_convert_date(self):
+        now = datetime.datetime.now()
+        string_representation = now.stftime('%Y-%m-%d')
+
+        sds = sabre_dev_studio.SabreDevStudio()
+        self.assertEqual(sds.convert_date(now), string_representation)
 
 if __name__ == '__main__':
     unittest.main()

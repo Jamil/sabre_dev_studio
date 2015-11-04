@@ -1,13 +1,13 @@
 Sabre Dev Studio -- Python Wrapper
 ==================================
 
-# Introduction
+## Introduction
 
 This is designed as a thin wrapper around Sabre's APIs, documentation for which can be found at #{ sabre API location }. The class handles authentication, request generation, and object conversion - instead of returning a dictionary, it can serialize the dictionary into a Named Tuple, with Pythonic naming conventions for the attributes.
 
 I'm not affiliated with Sabre -- this is just a small tool that I found useful when writing Python scripts which use Sabre Dev Studio, and thought I'd share it. It's licensed under the MIT license (terms in LICENSE).
 
-# Usage
+## Usage
 
 The SabreDevStudio class can be initialized with no parameters, i.e.
 
@@ -48,7 +48,11 @@ options = {
 result = sds.instaflights(options)
 ```
 
-# Testing
+You'll notice that in this example, the departure and return dates are in a specific (ISO 8601) format. For convenience, a `convert_date` function is included to easily convert Python date objects into this format.
+
+The reason the instaflights function does not take individual parameters as arguments into the function, and formats everything accordingly is because there are just too many options in the API -- it would be difficult and cumbersome to do this, and fix it whenever any minor change to the API comes out. For the same reason, the NamedTuple response is generated dynamically instead of a Response object being declared.
+
+## Testing
 
 There are tests in the tests/ folder. In order for these to run properly, a `config.json` file must be included, with contents of the form:
 
@@ -59,4 +63,4 @@ There are tests in the tests/ folder. In order for these to run properly, a `con
 }
 ```
 
-Don't worry, the test suite won't make too many requests. `base_test` makes four requests (excluding authentication), and each tester for the unit should only make one test to the endpoint its testing (e.g. `instaflights_test.py` will only make one request)
+Don't worry, the test suite won't make too many requests. `base_test` makes three requests (excluding authentication), and each tester for the unit should only make one test to the endpoint its testing (e.g. `instaflights_test.py` will only make one request)

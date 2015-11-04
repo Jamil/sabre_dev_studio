@@ -34,6 +34,11 @@ class TestBasicInstaflights(unittest.TestCase):
         self.sds.authenticate()
 
     def test_basic_request():
+        now = datetime.datetime.now()
+
+        tomorrow = now + timedelta(days=1)
+        day_after = now + timedelta(days=2)
+        
         tomorrow_str = tomorrow.strftime('%Y-%m-%d')
         day_after_str = day_after.strftime('%Y-%m-%d')
 
