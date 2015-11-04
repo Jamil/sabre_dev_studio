@@ -5,6 +5,7 @@ import sys
 
 sys.path.append('..')
 import sabre_dev_studio
+import sabre_dev_studio.sabre_exceptions as sabre_exceptions
 
 '''
 requires config.json in the same directory for api authentication
@@ -33,11 +34,11 @@ class TestBasicInstaflights(unittest.TestCase):
         self.sds.set_credentials(self.client_id, self.client_secret)
         self.sds.authenticate()
 
-    def test_basic_request():
+    def test_basic_request(self):
         now = datetime.datetime.now()
 
-        tomorrow = now + timedelta(days=1)
-        day_after = now + timedelta(days=2)
+        tomorrow = now + datetime.timedelta(days=1)
+        day_after = now + datetime.timedelta(days=2)
         
         tomorrow_str = tomorrow.strftime('%Y-%m-%d')
         day_after_str = day_after.strftime('%Y-%m-%d')
