@@ -54,5 +54,12 @@ class TestBasicInstaflights(unittest.TestCase):
         instaf = self.sds.instaflights(options)
         self.assertIsNotNone(instaf)
 
+    def test_no_authorization(self):
+        sds = sabre_dev_studio.SabreDevStudio()
+
+        with self.assertRaises(sabre_exceptions.NotAuthorizedError):
+            resp = sds.instaflights({})
+
+
 if __name__ == '__main__':
     unittest.main()

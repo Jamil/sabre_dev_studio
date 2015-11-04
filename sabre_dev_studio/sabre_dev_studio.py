@@ -11,7 +11,7 @@ from sabre_endpoints import sabre_endpoints
 
 
 class SabreDevStudio(object):
-    def __init__(self):
+    def __init__(self, environment='test', return_obj=True):
         self.auth_headers = None
 
         self.client_id = None
@@ -19,7 +19,15 @@ class SabreDevStudio(object):
         self.token = None
         self.token_expiry = None
 
-        self.host = 'https://api.test.sabre.com'
+        self.return_obj = return_obj
+
+        if environment is 'test':
+            self.host = 'https://api.test.sabre.com'
+        elif environemt is 'prod':
+            self.host = 'https://api.sabre.com'
+        else: # default to test
+            self.host = 'https://api.test.sabre.com'
+
 
     # make_endpoint
     # String -> String
@@ -73,7 +81,7 @@ class SabreDevStudio(object):
         return data
 
     # request
-    # String -> String -> Dictionary -> ResponseData
+    # String -> String -> Dictionary -> (ResponseData or dict)
     # The generic request function -- all API requests go through here
     # Should be called by a higher-level wrapper like instaflights(...)
     #    method is a String, 'GET', 'PUT', 'PATCH', 'POST', or 'DELETE'
@@ -112,7 +120,12 @@ class SabreDevStudio(object):
             raise UnsupportedMethodError
 
         self.verify_response(resp)
-        resp_data = self.process_response(resp.json())
+
+        if self.return_obj:
+            resp_data = self.process_response(resp.json())
+        else:
+            resp_data = resp.json()
+
         return resp_data
 
     # verify_response
@@ -144,7 +157,7 @@ class SabreDevStudio(object):
                 raise sabre_exceptions.SabreErrorServiceUnavailable
             elif resp.status_code == 504:
                 raise sabre_exceptions.SabreErrorGatewayTimeout
-        
+
     # process_response
     # JSON Dictionary -> ResponseData
     # Converts a dictionary into a python object with Pythonic names
@@ -158,6 +171,7 @@ class SabreDevStudio(object):
                 return
 
             for key in d.keys():
+                # Pythonize
                 s = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', key)
                 s = re.sub('([a-z0-9])([A-Z])', r'\1_\2', s).lower()
                 s = re.sub('[^0-9a-zA-Z]+', '_', s)
@@ -175,7 +189,7 @@ class SabreDevStudio(object):
         json_str = json.dumps(json_obj)
         obj = json.loads(json_str,
                          object_hook=lambda d: collections.namedtuple('ResponseData', d.keys())(*d.values()))
-            
+
         return obj
 
     # instaflights
@@ -184,5 +198,3 @@ class SabreDevStudio(object):
     def instaflights(self, options):
         resp = self.request('GET', sabre_endpoints['instaflights'], options)
         return resp
-        
-        
