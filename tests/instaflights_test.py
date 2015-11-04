@@ -16,7 +16,7 @@ requires config.json in the same directory for api authentication
 
 '''
 class TestBasicInstaflights(unittest.TestCase):
-    def prepare_client(self):
+    def read_config(self):
         raw_data = open('config.json').read()
 
         data = json.loads(raw_data)
@@ -24,23 +24,16 @@ class TestBasicInstaflights(unittest.TestCase):
         client_secret = data['sabre_client_secret']
         client_id = data['sabre_client_id']
 
-        sds = sabre_dev_studio.SabreDevStudio()
-        sds.set_credentials(client_id, client_secret)
-        sds.authenticate()
-
-        self.sds = sds
+        return (client_id, client_secret)
 
     def setUp(self):
-        self.prepare_client()
+        # Read from config
+        self.client_id, self.client_secret = self.read_config()
+        self.sds = sabre_dev_studio.SabreDevStudio()
+        self.sds.set_credentials(self.client_id, self.client_secret)
+        self.sds.authenticate()
 
-    def test_basic_request(self):
-        now = datetime.datetime.now()
-
-        # Set departure date to tomorrow
-        # Set arrival date to day after
-        tomorrow = now + datetime.timedelta(days=1)
-        day_after = now + datetime.timedelta(days=2)
-
+    def test_basic_request():
         tomorrow_str = tomorrow.strftime('%Y-%m-%d')
         day_after_str = day_after.strftime('%Y-%m-%d')
 
@@ -50,7 +43,6 @@ class TestBasicInstaflights(unittest.TestCase):
             'departuredate': tomorrow_str,
             'returndate': day_after_str
         }
-
         instaf = self.sds.instaflights(options)
         self.assertIsNotNone(instaf)
 
