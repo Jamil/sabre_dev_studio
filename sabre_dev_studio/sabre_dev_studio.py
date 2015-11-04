@@ -172,12 +172,26 @@ class SabreDevStudio(object):
 
             for key in d.keys():
                 # Pythonize
+
+                # Camelcase to _
                 s = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', key)
                 s = re.sub('([a-z0-9])([A-Z])', r'\1_\2', s).lower()
+
+                # Replace non-alphanumeric characters with underscores
                 s = re.sub('[^0-9a-zA-Z]+', '_', s)
+
+                # Remove leading numbers
                 s = re.sub('^[0-9]', '', s)
                 
+                # Replace whitespace with underscore
                 s = s.replace(' ', '_')
+
+                # Consolidate duplicate underscores
+                s = re.sub('__*', '_', s)
+
+                # Remove trailing underscore
+                s = re.sub('_*$', '', s)
+                
                 d[s] = d[key]
                 if s != key:
                     del d[key]

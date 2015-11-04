@@ -82,6 +82,14 @@ class TestBasicSabreDevStudio(unittest.TestCase):
         with self.assertRaises(sabre_exceptions.SabreErrorNotFound):
             resp = sds.request('GET', '/v1/lists/supported/cities/Toronto/airports/')
 
+    def test_get_json(self):
+        sds = sabre_dev_studio.SabreDevStudio()
+        sds.set_credentials(self.client_id, self.client_secret)
+        sds.authenticate()
+
+        resp = sds.request('GET', '/v1/lists/supported/cities/YTO/airports/')
+        self.assertTrue(isinstance(resp, dict))
+        
     def test_process_response(self):
         raw_data = open('sample_json.json').read()
         self.assertIsNotNone(raw_data)
@@ -100,6 +108,35 @@ class TestBasicSabreDevStudio(unittest.TestCase):
         self.assertTrue(hasattr(resp.colors_array[1], 'color_name'))
         self.assertFalse(hasattr(resp.colors_array[1], 'colorName'))
         self.assertEqual(resp.colors_array[0].color_name, 'red')
+
+    def test_convert_key_special_chars(self):
+        sds = sabre_dev_studio.SabreDevStudio()
+
+        # Whitespace in key
+        data = json.loads('{"whitespace test": "empty"}')
+        resp = sds.process_response(data)
+        self.assertTrue(hasattr(resp, 'whitespace_test'))
+
+        # Non-alphanumeric characters
+        # Check that it doesn't fail
+        data = json.loads('{"special% char\' test!": "empty"}')
+        resp = sds.process_response(data)
+        self.assertTrue(hasattr(resp, 'special_char_test'))
+
+        # Key starting with a number
+        data = json.loads('{"1number_start_test": "empty"}')
+        resp = sds.process_response(data)
+        self.assertTrue(hasattr(resp, 'number_start_test'))
+
+        # Key ending with a number
+        data = json.loads('{"NumberEndTest1": "empty"}')
+        resp = sds.process_response(data)
+        self.assertTrue(hasattr(resp, 'number_end_test1'))
+
+        # Key with multiple contiguous special characters
+        data = json.loads('{"multiple__Contiguous!!!SpecialCharacters%%%%": "empty"}')
+        resp = sds.process_response(data)
+        self.assertTrue(hasattr(resp, 'multiple_contiguous_special_characters'))
 
     def test_convert_date(self):
         now = datetime.datetime.now()
