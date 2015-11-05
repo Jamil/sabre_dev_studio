@@ -3,7 +3,7 @@ Sabre Dev Studio -- Python Wrapper
 
 ## Introduction
 
-This is designed as a thin wrapper around Sabre's APIs, documentation for which can be found at #{ sabre API location }. The class handles authentication, request generation, and object conversion - instead of returning a dictionary, it can serialize the dictionary into a Named Tuple, with Pythonic naming conventions for the attributes.
+This is designed as a thin wrapper around Sabre's APIs, documentation for which can be found at https://developer.sabre.com/docs/read/Home . The class handles authentication, request generation, and object conversion - instead of returning a dictionary, it can serialize the dictionary into a Named Tuple, with Pythonic naming conventions for the attributes.
 
 I'm not affiliated with Sabre -- this is just a small tool that I found useful when writing Python scripts which use Sabre Dev Studio, and thought I'd share it. It's licensed under the MIT license (terms in LICENSE).
 
