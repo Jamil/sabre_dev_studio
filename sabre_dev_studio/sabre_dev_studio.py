@@ -90,34 +90,17 @@ class SabreDevStudio(object):
     # Returns an object with the properties of the response data
     def request(self, method, endpoint, payload=None):
         now = datetime.datetime.now()
+        endpoint = self.make_endpoint(endpoint)
 
         # Check for token
         if not self.token:
-            raise sabre_exceptions.NotAuthorizedError
-
-        if not self.token_expiry:
-            pass
-        elif self.token_expiry < now:
-            # Authenticate again
-            self.authenticate()
-
-        endpoint = self.make_endpoint(endpoint)
-        auth_header = {
-            "Authorization": "Bearer" + self.token
-        }
-
-        if method == 'GET':
-            resp = requests.get(endpoint, headers=auth_header, params=payload)
-        elif method == 'PUT':
-            resp = requests.put(endpoint, headers=auth_header, data=payload)
-        elif method == 'PATCH':
-            resp = requests.put(endpoint, headers=auth_header, data=payload)
+            resp = requests.put(endpoint, headers=self.auth_headers, data=payload)
         elif method == 'POST':
-            resp = requests.post(endpoint, headers=auth_header, data=payload)
+            resp = requests.post(endpoint, headers=self.auth_headers, data=payload)
         elif method == 'DELETE':
-            resp = requests.delete(endpoint, headers=auth_header)
+            resp = requests.delete(endpoint, headers=self.auth_headers)
         else:
-            raise UnsupportedMethodError
+            raise sabre_exceptions.UnsupportedMethodError
 
         self.verify_response(resp)
 
@@ -141,7 +124,7 @@ class SabreDevStudio(object):
             if resp.status_code == 400:
                 raise sabre_exceptions.SabreErrorBadRequest(resp.json())
             elif resp.status_code == 401:
-                raise sabre_exceptions.SabreErrorUnauthenticated(resp.json())
+                raise sabre_exceptions.SabreErrorUnauthorized(resp.json())
             elif resp.status_code == 403:
                 raise sabre_exceptions.SabreErrorForbidden(resp.json())
             elif resp.status_code == 404:
