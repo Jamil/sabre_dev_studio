@@ -23,7 +23,7 @@ class SabreDevStudio(object):
 
         if environment is 'test':
             self.host = 'https://api.test.sabre.com'
-        elif environemt is 'prod':
+        elif environment is 'prod':
             self.host = 'https://api.sabre.com'
         else: # default to test
             self.host = 'https://api.test.sabre.com'
