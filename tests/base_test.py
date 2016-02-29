@@ -71,7 +71,7 @@ class TestBasicSabreDevStudio(unittest.TestCase):
     def test_no_authorization(self):
         sds = sabre_dev_studio.SabreDevStudio()
 
-        with self.assertRaises(sabre_exceptions.NotAuthorizedError):
+        with self.assertRaises(sabre_exceptions.SabreErrorUnauthorized):
             resp = sds.request('GET', '/v1/lists/supported/cities/YTO/airports/')
 
     def test_invalid_location(self):
