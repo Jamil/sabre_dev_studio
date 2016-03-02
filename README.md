@@ -1,11 +1,11 @@
-Sabre Dev Studio -- Python Wrapper
+Sabre Dev Studio: Python Wrapper
 ==================================
 
 ## Introduction
 
 This is designed as a thin wrapper around Sabre's APIs, documentation for which can be found at https://developer.sabre.com/docs/read/Home . The class handles authentication, request generation, and object conversion - instead of returning a dictionary, it can serialize the dictionary into a Named Tuple, with Pythonic naming conventions for the attributes (e.g. `origin_city` instead of `OriginCity`).
 
-I'm not affiliated with Sabre -- this is just a small tool that I found useful when writing Python scripts which use Sabre Dev Studio, and thought I'd share it. It's licensed under the MIT license (terms in `LICENSE`).
+I'm not affiliated with Sabre; this is just a small tool that I found useful when writing Python scripts which use Sabre Dev Studio, and thought I'd share it. It's licensed under the MIT license (terms in `LICENSE`).
 
 ## Usage
 
@@ -50,7 +50,7 @@ result = sds.instaflights(options)
 
 You'll notice that in this example, the departure and return dates are in a specific (ISO 8601) format. For convenience, a `convert_date` function is included to easily convert Python date objects into this format.
 
-The reason the instaflights function does not take individual parameters as arguments into the function, and formats everything accordingly is because there are just too many options in the API -- it would be difficult and cumbersome to do this, and fix it whenever any minor change to the API comes out. For the same reason, the NamedTuple response is generated dynamically instead of a Response object being declared.
+The reason the instaflights function does not take individual parameters as arguments into the function, and formats everything accordingly is because there are just too many options in the API; it would be difficult and cumbersome to do this, and fix it whenever any minor change to the API comes out. For the same reason, the NamedTuple response is generated dynamically instead of a Response object being declared.
 
 ## Testing
 
