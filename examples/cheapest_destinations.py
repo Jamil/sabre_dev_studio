@@ -67,7 +67,19 @@ def main():
             airlines = ' '.join(city.lowest_fare.airline_codes)
             lowest_fare = str('${:,.2f}'.format(city.lowest_fare.fare))
 
-            data = "{0:4} {1:11} {2:12}".format(city.origin_location, lowest_fare, airlines)
+            dep_date = datetime.datetime.strptime(city.departure_date_time,
+                                                  "%Y-%m-%dT%H:%M:%S")
+            arr_date = datetime.datetime.strptime(city.return_date_time,
+                                                  "%Y-%m-%dT%H:%M:%S")
+
+            dep_date_str = dep_date.strftime('%b %d')
+            arr_date_str = arr_date.strftime('%b %d')
+
+            data = "{0:4} {1:11} {2:12} {3:8} to {4:8}".format(city.origin_location,
+                                                               lowest_fare,
+                                                               airlines,
+                                                               dep_date_str,
+                                                               arr_date_str)
             print data
 
 if __name__ == '__main__':
