@@ -16,7 +16,7 @@ requires config.json in the same directory for api authentication
 }
 
 '''
-class TestBasicInstaflights(unittest.TestCase):
+class TestBasicFlightsTo(unittest.TestCase):
     def read_config(self):
         raw_data = open('config.json').read()
 
@@ -36,8 +36,9 @@ class TestBasicInstaflights(unittest.TestCase):
 
     def test_basic_request(self):
         city = 'YTO'
-        instaf = self.sds.flights_to(city)
-        self.assertIsNotNone(instaf)
+        flights_to_city = self.sds.flights_to(city)
+        print(flights_to_city)
+        self.assertIsNotNone(flights_to_city)
 
     def test_no_authorization(self):
         sds = sabre_dev_studio.SabreDevStudio()
