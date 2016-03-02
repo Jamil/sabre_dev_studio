@@ -55,14 +55,19 @@ def main():
     else:
         client = set_up_client()
         city = sys.argv[1]
-        resp = client.flights_to(city)
+
+        try:
+            point_of_sale = sys.argv[2]
+            resp = client.flights_to(city, point_of_sale)
+        except IndexError:
+            resp = client.flights_to(city)
 
         data = resp[0]
         for city in data:
             airlines = ' '.join(city.lowest_fare.airline_codes)
             lowest_fare = str('${:,.2f}'.format(city.lowest_fare.fare))
 
-            data = "{0:4} {1:9} {2:12}".format(city.origin_location, lowest_fare, airlines)
+            data = "{0:4} {1:11} {2:12}".format(city.origin_location, lowest_fare, airlines)
             print data
 
 if __name__ == '__main__':

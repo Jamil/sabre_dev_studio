@@ -39,6 +39,12 @@ class TestBasicFlightsTo(unittest.TestCase):
         flights_to_city = self.sds.flights_to(city)
         self.assertIsNotNone(flights_to_city)
 
+    def test_point_of_sale_request(self):
+        city = 'YTO'
+        point_of_sale = 'CA'
+        flights_to_city = self.sds.flights_to(city, point_of_sale)
+        self.assertIsNotNone(flights_to_city)
+
     def test_no_authorization(self):
         sds = sabre_dev_studio.SabreDevStudio()
 

@@ -223,6 +223,14 @@ class SabreDevStudio(object):
     # Dictionary -> ResponseData
     # Executes a request to Sabre's "Flights To" endpoint with the options specified
     # Returns 20 of the lowest published fares available for a given destination
-    def flights_to(self, city_code):
-        resp = self.request('GET', sabre_endpoints['flights_to'] + '/' + city_code)
+    # Defaults to 'US' as point of sale
+    def flights_to(self, city_code, point_of_sale=None):
+        opts = {
+            'pointofsalecountry': point_of_sale
+        }
+
+        resp = self.request('GET',
+                            sabre_endpoints['flights_to'] + '/' + city_code,
+                            opts)
+
         return resp
