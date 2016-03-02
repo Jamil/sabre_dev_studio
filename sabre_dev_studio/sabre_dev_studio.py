@@ -218,3 +218,11 @@ class SabreDevStudio(object):
     def instaflights(self, options):
         resp = self.request('GET', sabre_endpoints['instaflights'], options)
         return resp
+
+    # flights_to
+    # Dictionary -> ResponseData
+    # Executes a request to Sabre's "Flights To" endpoint with the options specified
+    # Returns 20 of the lowest published fares available for a given destination
+    def flights_to(self, city_code):
+        resp = self.request('GET', sabre_endpoints['flights_to'] + '/' + city_code)
+        return resp
