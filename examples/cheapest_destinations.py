@@ -59,7 +59,11 @@ def main():
 
         data = resp[0]
         for city in data:
-            print(city.origin_location + '\t' + str(city.lowest_fare.fare))
+            airlines = ' '.join(city.lowest_fare.airline_codes)
+            lowest_fare = str('${:,.2f}'.format(city.lowest_fare.fare))
+
+            data = "{0:4} {1:9} {2:12}".format(city.origin_location, lowest_fare, airlines)
+            print data
 
 if __name__ == '__main__':
     main()
