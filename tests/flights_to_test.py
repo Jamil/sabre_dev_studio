@@ -37,7 +37,6 @@ class TestBasicFlightsTo(unittest.TestCase):
     def test_basic_request(self):
         city = 'YTO'
         flights_to_city = self.sds.flights_to(city)
-        print(flights_to_city)
         self.assertIsNotNone(flights_to_city)
 
     def test_no_authorization(self):
