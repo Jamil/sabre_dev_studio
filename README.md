@@ -3,9 +3,9 @@ Sabre Dev Studio -- Python Wrapper
 
 ## Introduction
 
-This is designed as a thin wrapper around Sabre's APIs, documentation for which can be found at https://developer.sabre.com/docs/read/Home . The class handles authentication, request generation, and object conversion - instead of returning a dictionary, it can serialize the dictionary into a Named Tuple, with Pythonic naming conventions for the attributes.
+This is designed as a thin wrapper around Sabre's APIs, documentation for which can be found at https://developer.sabre.com/docs/read/Home . The class handles authentication, request generation, and object conversion - instead of returning a dictionary, it can serialize the dictionary into a Named Tuple, with Pythonic naming conventions for the attributes (e.g. `origin_city` instead of `OriginCity`).
 
-I'm not affiliated with Sabre -- this is just a small tool that I found useful when writing Python scripts which use Sabre Dev Studio, and thought I'd share it. It's licensed under the MIT license (terms in LICENSE).
+I'm not affiliated with Sabre -- this is just a small tool that I found useful when writing Python scripts which use Sabre Dev Studio, and thought I'd share it. It's licensed under the MIT license (terms in `LICENSE`).
 
 ## Usage
 
@@ -54,7 +54,7 @@ The reason the instaflights function does not take individual parameters as argu
 
 ## Testing
 
-There are tests in the tests/ folder. In order for these to run properly, a `config.json` file must be included, with contents of the form:
+There are tests in the `tests/` folder. In order for these to run properly, a `config.json` file must be included, with contents of the form:
 
 ```
 {
@@ -63,4 +63,25 @@ There are tests in the tests/ folder. In order for these to run properly, a `con
 }
 ```
 
-Don't worry, the test suite won't make too many requests. `base_test` makes three requests (excluding authentication), and each tester for the unit should only make one test to the endpoint its testing (e.g. `instaflights_test.py` will only make one request)
+Don't worry, the test suite won't make too many requests. `base_test` makes three requests (excluding authentication), and each tester for the unit should only make at most two requests to the endpoint its testing (e.g. `instaflights_test.py` will only make one request)
+
+## Examples
+
+There are example utilities in the `examples/` directory. For example, the `cheapest_destinations.py` tool finds the cheapest roundtrip airfares to a given airport. Luckily, most domestic (US) airfares are roundtrip, so this effectively works as both a 'Flights To' and 'Flights From' finder.
+
+```
+python cheapest-destinations.py SFO
+```
+
+Will return something like:
+
+```
+PHX  $88.00      F9
+DFW  $100.60     AA
+LAX  $110.60     UA
+SNA  $110.60     UA
+ORD  $120.60     AA UA
+BUR  $128.60     UA
+SAN  $130.60     UA
+DEN  $130.60     VX
+```
