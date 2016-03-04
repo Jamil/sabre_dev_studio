@@ -88,7 +88,7 @@ class SabreDevStudio(object):
     #    endpoint is a relative endpoint
     #    payload is the data -- added as query params for GET
     # Returns an object with the properties of the response data
-    def request(self, method, endpoint, payload=None):
+    def request(self, method, endpoint, payload=None, additional_headers=None):
         now = datetime.datetime.now()
 
         # Check for token
@@ -103,19 +103,22 @@ class SabreDevStudio(object):
 
         endpoint = self.make_endpoint(endpoint)
         auth_header = {
-            "Authorization": "Bearer" + self.token
+            'Authorization': 'Bearer' + self.token
         }
 
+        headers = additional_headers.copy() if additional_headers else {}
+        headers.update(auth_header)
+
         if method == 'GET':
-            resp = requests.get(endpoint, headers=auth_header, params=payload)
+            resp = requests.get(endpoint, headers=headers, params=payload)
         elif method == 'PUT':
-            resp = requests.put(endpoint, headers=auth_header, data=payload)
+            resp = requests.put(endpoint, headers=headers, data=payload)
         elif method == 'PATCH':
-            resp = requests.put(endpoint, headers=auth_header, data=payload)
+            resp = requests.put(endpoint, headers=headers, data=payload)
         elif method == 'POST':
-            resp = requests.post(endpoint, headers=auth_header, data=payload)
+            resp = requests.post(endpoint, headers=headers, data=payload)
         elif method == 'DELETE':
-            resp = requests.delete(endpoint, headers=auth_header)
+            resp = requests.delete(endpoint, headers=headers)
         else:
             raise UnsupportedMethodError
 
@@ -221,7 +224,7 @@ class SabreDevStudio(object):
         return resp
 
     # flights_to
-    # Dictionary -> ResponseData
+    # String -> String? -> ResponseData
     # Executes a request to Sabre's "Flights To" endpoint with the options specified
     # Returns 20 of the lowest published fares available for a given destination
     # Defaults to 'US' as point of sale
@@ -236,9 +239,39 @@ class SabreDevStudio(object):
 
         return resp
 
-    def seat_map(self, opts):
-        resp = self.request('GET',
+    # seat_map
+    # String -> String -> String -> DateTime -> String -> ResponseData
+    # Executes a request to Sabre's "Seat Map" endpoint with the arguments specified
+    # For more advanced usage, use seat_map_opts to specify custom options
+    def seat_map(self, origin, destination, departure_date, carrier, flt_num):
+        opts = {
+            "EnhancedSeatMapRQ": {
+                "SeatMapQueryEnhanced": {
+                    "RequestType": "Payload",
+                    "Flight": {
+                        "destination": destination,
+                        "origin": origin,
+                        "DepartureDate": {
+                            "content": self.convert_date(departure_date)
+                        },
+                        "Marketing": [{
+                            "carrier": carrier,
+                            "content": str(flt_num)
+                        }]
+                    }
+                }
+            }
+        }
+        return self.seat_map_opts(opts)
+
+    # seat_map
+    # Dictionary -> ResponseData 
+    # Executes a request to Sabre's "Seat Map" endpoint with the arguments specified
+    # For more advanced usage, use seat_map_opts to specify custom options
+    def seat_map_opts(self, opts):
+        resp = self.request('POST',
                             sabre_endpoints['seat_map'],
-                            opts)
+                            json.dumps(opts, sort_keys=True),
+                            additional_headers={'Content-Type': 'application/json'})
         
         return resp
