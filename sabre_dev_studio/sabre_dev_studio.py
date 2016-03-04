@@ -137,7 +137,6 @@ class SabreDevStudio(object):
             pass
 
         else:
-            e = resp.json()
             if resp.status_code == 400:
                 raise sabre_exceptions.SabreErrorBadRequest(resp.json())
             elif resp.status_code == 401:
@@ -146,6 +145,8 @@ class SabreDevStudio(object):
                 raise sabre_exceptions.SabreErrorForbidden(resp.json())
             elif resp.status_code == 404:
                 raise sabre_exceptions.SabreErrorNotFound(resp.json())
+            elif resp.status_code == 405:
+                raise sabre_exceptions.SabreErrorMethodNotAllowed()
             elif resp.status_code == 406:
                 raise sabre_exceptions.SabreErrorNotAcceptable(resp.json())
             elif resp.status_code == 429:
@@ -233,4 +234,11 @@ class SabreDevStudio(object):
                             sabre_endpoints['flights_to'] + '/' + city_code,
                             opts)
 
+        return resp
+
+    def seat_map(self, opts):
+        resp = self.request('GET',
+                            sabre_endpoints['seat_map'],
+                            opts)
+        
         return resp

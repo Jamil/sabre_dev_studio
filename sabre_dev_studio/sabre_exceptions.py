@@ -11,23 +11,30 @@ class UnsupportedMethodError(Exception):
 
 # Base API Exception
 class SabreDevStudioException(Exception):
-    def __init__(self, e):
-        message = e.get('message')
-        super(SabreDevStudioException, self).__init__(message)
+    def __init__(self, e=None):
+        if (e):
+            message = e.get('message')
+            super(SabreDevStudioException, self).__init__(message)
 
-        self.message = message
-        self.status = e.get('status')
-        self.error_code = e.get('errorCode')
-        self.e_type = e.get('type')
-        self.tstamp = e.get('timeStamp')
+            self.message = message
+            self.status = e.get('status')
+            self.error_code = e.get('errorCode')
+            self.e_type = e.get('type')
+            self.tstamp = e.get('timeStamp')
+
+        else:
+            super(SabreDevStudioException, self).__init__()
 
     def __unicode__(self):
-        str += 'Message:\t' + self.message + '\n'
-        str += 'Status:\t' + self.status + '\n'
-        str += 'Error Code:\t' + self.error_code + '\n'
-        str += 'Type:\t' + self.type + '\n'
-        str += 'Timestamp:\t' + self.timestamp + '\n'
-        return str
+        if self.message:
+            str += 'Message:\t' + self.message + '\n'
+            str += 'Status:\t' + self.status + '\n'
+            str += 'Error Code:\t' + self.error_code + '\n'
+            str += 'Type:\t' + self.type + '\n'
+            str += 'Timestamp:\t' + self.timestamp + '\n'
+            return str
+        else:
+            return "<" + self.__class__.__name__ + ">"
 
 
 # 400
@@ -44,6 +51,10 @@ class SabreErrorForbidden(SabreDevStudioException):
 
 # 404
 class SabreErrorNotFound(SabreDevStudioException):
+    pass
+
+# 404
+class SabreErrorMethodNotAllowed(SabreDevStudioException):
     pass
 
 # 406
