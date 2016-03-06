@@ -156,7 +156,8 @@ class SabreDevStudio(object):
                 raise sabre_exceptions.SabreErrorRateLimited(resp.json())
 
             elif resp.status_code == 500:
-                raise sabre_exceptions.SabreInternalServerError
+                print(resp.text)
+                raise sabre_exceptions.SabreInternalServerError(resp.text)
             elif resp.status_code == 503:
                 raise sabre_exceptions.SabreErrorServiceUnavailable
             elif resp.status_code == 504:

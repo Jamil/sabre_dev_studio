@@ -12,7 +12,7 @@ class UnsupportedMethodError(Exception):
 # Base API Exception
 class SabreDevStudioException(Exception):
     def __init__(self, e=None):
-        if (e):
+        if isinstance(e, dict):
             message = e.get('message')
             super(SabreDevStudioException, self).__init__(message)
 
@@ -21,18 +21,21 @@ class SabreDevStudioException(Exception):
             self.error_code = e.get('errorCode')
             self.e_type = e.get('type')
             self.tstamp = e.get('timeStamp')
-
+        elif isinstance(e, str):
+            self.message = e
         else:
             super(SabreDevStudioException, self).__init__()
 
     def __unicode__(self):
-        if self.message:
+        if self.message and self.status:
             str += 'Message:\t' + self.message + '\n'
             str += 'Status:\t' + self.status + '\n'
             str += 'Error Code:\t' + self.error_code + '\n'
             str += 'Type:\t' + self.type + '\n'
             str += 'Timestamp:\t' + self.timestamp + '\n'
             return str
+        elif self.message:
+            return self.message
         else:
             return "<" + self.__class__.__name__ + ">"
 
