@@ -87,3 +87,9 @@ DEN  $130.60     VX
 ```
 
 There is also a `seat_maps.py` example, which returns the seat map for a given flight, but the API is *very* buggy, and doesn't work for about 90% of the cases I've tried.
+
+```
+python seat-maps.py JFK LAX 05-01-2016 AA 1
+```
+
+I find that this only works for American Airlines and perhaps other carriers that use SABRE, but even with AA there are some Internal Server Errors.
