@@ -85,3 +85,5 @@ BUR  $128.60     UA
 SAN  $130.60     UA
 DEN  $130.60     VX
 ```
+
+There is also a `seat_maps.py` example, which returns the seat map for a given flight, but the API is *very* buggy, and doesn't work for about 90% of the cases I've tried.
