@@ -50,7 +50,9 @@ result = sds.instaflights(options)
 
 You'll notice that in this example, the departure and return dates are in a specific (ISO 8601) format. For convenience, a `convert_date` function is included to easily convert Python date objects into this format.
 
-The reason the instaflights function does not take individual parameters as arguments into the function, and formats everything accordingly is because there are just too many options in the API; it would be difficult and cumbersome to do this, and fix it whenever any minor change to the API comes out. For the same reason, the NamedTuple response is generated dynamically instead of a Response object being declared.
+The reason the `instaflights` function does not take individual parameters as arguments into the function, and formats everything accordingly is because there are just too many options in the API; it would be difficult and cumbersome to do this, and fix it whenever any minor change to the API comes out. For the same reason, the NamedTuple response is generated dynamically instead of a Response object being declared.
+
+Functions for other endpoints may have both convenience functions, taking parameters, or just a dictionary, like `instaflights`. See the `flights_to()` function for an example.
 
 ## Testing
 
