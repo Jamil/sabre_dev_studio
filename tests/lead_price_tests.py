@@ -35,7 +35,7 @@ class TestBasicLeadPrice(unittest.TestCase):
         self.sds.authenticate()
 
     def test_request_with_args(self):
-        prices = self.sds.lead_price('YTO', 'SFO', [3,4])
+        prices = self.sds.lead_price('YTO', 'SFO', [3,4], point_of_sale='CA')
 
         self.assertIsNotNone(prices)
 
@@ -43,7 +43,8 @@ class TestBasicLeadPrice(unittest.TestCase):
         opts = {
             'origin': 'YTO',
             'destination': 'SFO',
-            'lengthofstay': [3,4]
+            'lengthofstay': [3,4],
+            'pointofsalecountry': 'CA'
         }
 
         prices = self.sds.lead_price_opts(opts)
