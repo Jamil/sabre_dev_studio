@@ -286,7 +286,7 @@ class SabreDevStudio(object):
         opts = other_opts.copy()
         opts['origin'] = origin
         opts['destination'] = destination
-        opts['lengthofstay'] = length
+        opts['lengthofstay'] = ','.join(map(str, length))
 
         resp = self.request('GET',
                             sabre_endpoints['lead_price'],
