@@ -44,37 +44,38 @@ def main():
         destination = sys.argv[2]
 
         try:
-            length_of_stay = int(sys.argv[3])
+            length_of_stay = [int(sys.argv[3]),]
         except:
             print('Length of stay must be an integer')
 
         if len(sys.argv) >= 5:
-            point_of_sale = sys.argv[3]
+            point_of_sale = sys.argv[4]
         else:
             point_of_sale = 'US'
 
         resp = client.lead_price(origin, destination, length_of_stay,
                                  point_of_sale=point_of_sale)
 
-        data = resp[0]
-        for city in data:
-            airlines = ' '.join(city.lowest_fare.airline_codes)
-            lowest_fare = str('${:,.2f}'.format(city.lowest_fare.fare))
+        prices = []
+        for fare in resp.fare_info:
+            prices.append((fare.departure_date_time,
+                           fare.return_date_time,
+                           fare.lowest_fare.fare,
+                           fare.lowest_fare.airline_codes,))
 
-            dep_date = datetime.datetime.strptime(city.departure_date_time,
-                                                  "%Y-%m-%dT%H:%M:%S")
-            arr_date = datetime.datetime.strptime(city.return_date_time,
-                                                  "%Y-%m-%dT%H:%M:%S")
+        sorted_prices = sorted(prices, key = lambda x: x[2])
 
-            dep_date_str = dep_date.strftime('%b %d')
-            arr_date_str = arr_date.strftime('%b %d')
+        print('Lowest 10 prices:')
+        for price in sorted_prices[:10]:
+            price_round = '%.2f' % price[2]
+            out_str = "${0:8} {1:8} {2} to {3}".format(price_round,
+                                                       ' '.join(price[3]),
+                                                       price[0].split('T')[0],
+                                                       price[1].split('T')[0])
+            print(out_str)
 
-            data = "{0:4} {1:11} {2:12} {3:8} to {4:8}".format(city.origin_location,
-                                                               lowest_fare,
-                                                               airlines,
-                                                               dep_date_str,
-                                                               arr_date_str)
-            print data
 
 if __name__ == '__main__':
     main()
+
+
