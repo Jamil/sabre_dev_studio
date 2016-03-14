@@ -53,8 +53,12 @@ def main():
         else:
             point_of_sale = 'US'
 
-        resp = client.lead_price(origin, destination, length_of_stay,
-                                 point_of_sale=point_of_sale)
+        try:
+            resp = client.lead_price(origin, destination, length_of_stay,
+                                     point_of_sale=point_of_sale)
+        except sabre_exceptions.SabreErrorNotFound:
+            print('No results were found.')
+            sys.exit(0)
 
         prices = []
         for fare in resp.fare_info:
