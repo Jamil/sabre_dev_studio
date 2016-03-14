@@ -292,7 +292,6 @@ class SabreDevStudio(object):
         opts['lengthofstay'] = ','.join(map(str, length))
         opts['pointofsalecountry'] = point_of_sale
 
-        print(point_of_sale)
         if departure_date:
             opts['departure_date'] = self.convert_date(departure_date);
         if min_fare:
