@@ -35,7 +35,7 @@ def set_up_client():
     return sds
 
 def main():
-    if (len(sys.argv) < 5):
+    if (len(sys.argv) < 4):
         print('Specify origin, destination, length of stay, ' +
               'and optionally point of sale')
     else:
