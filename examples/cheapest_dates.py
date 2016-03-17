@@ -57,15 +57,16 @@ def main():
             resp = client.lead_price(origin, destination, length_of_stay,
                                      point_of_sale=point_of_sale)
         except sabre_exceptions.SabreErrorNotFound:
-            print('No results were found.')
+            print('No results were found')
             sys.exit(0)
 
         prices = []
         for fare in resp.fare_info:
-            prices.append((fare.departure_date_time,
-                           fare.return_date_time,
-                           fare.lowest_fare.fare,
-                           fare.lowest_fare.airline_codes,))
+            if fare.lowest_fare != 'N/A':
+                prices.append((fare.departure_date_time,
+                               fare.return_date_time,
+                               fare.lowest_fare.fare,
+                               fare.lowest_fare.airline_codes,))
 
         sorted_prices = sorted(prices, key = lambda x: x[2])
 
