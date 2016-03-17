@@ -11,33 +11,33 @@ I'm not affiliated with Sabre; this is just a small tool that I found useful whe
 
 The SabreDevStudio class can be initialized with no parameters, i.e.
 
-```
+```python
 sds = SabreDevStudio()
 ```
 
 By default, this selects the test environment. To use the production server, initialize the class like so:
 
-```
+```python
 sds = SabreDevStudio(environment='prod')
 ```
 
 To configure whether `request` will return a dictionary or an object, initialize the class with the parameter `return_obj`
 
-```
+```python
 sds1 = SabreDevStudio(return_obj=True)   # Will return a NamedTuple
 sds2 = SabreDevStudio(return_obj=False)  # Will return a Dictionary
 ```
 
 The class must first be configured with your client ID and client secret, and then authenticated (which issues the token get request and saves the token to the class' internal state):
 
-```
+```python
 sds.set_credentials('MYCLIENTID', 'MYCLIENTSECRET')
 sds.authenticate()
 ```
 
 After this, you should be ready to start issuing requests. Just call one of the supported methods, like `instaflights()`, or issue a request manually with a relative endpoint using `request(method, endpoint, payload)`, where payload is either the data (in the case of `PUT`, `POST`, or `PATCH`, or the query params (in the case of `GET`).
 
-```
+```python
 options = {
     'origin': 'JFK',
     'destination': 'LAX',
