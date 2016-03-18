@@ -70,8 +70,8 @@ def main():
 
         sorted_prices = sorted(prices, key = lambda x: x[2])
 
-        print('Lowest 10 prices:')
-        for price in sorted_prices[:10]:
+        print('Lowest 20 prices:')
+        for price in sorted_prices[:20]:
             price_round = '%.2f' % price[2]
             out_str = "${0:8} {1:8} {2} to {3}".format(price_round,
                                                        ' '.join(price[3]),
