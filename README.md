@@ -65,7 +65,7 @@ There are tests in the `tests/` folder. In order for these to run properly, a `c
 }
 ```
 
-Don't worry, the test suite won't make too many requests, and won't have a huge impact on your request limit. `base_test` makes three requests (excluding authentication), and each tester for the unit should only make at most two requests to the endpoint its testing (e.g. `instaflights_test.py` will only make one request).
+Don't worry, the test suite won't make too many requests, and won't have a huge impact on your request limit. `base_test` makes three requests (excluding authentication), and each tester for the unit should only make at most two requests to the endpoint its testing (e.g. `instaflights_test.py` will only make one request). Simply run `./tester` in the `tests/` directory to run all tests.
 
 ## Examples
 
