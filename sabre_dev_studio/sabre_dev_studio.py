@@ -293,11 +293,11 @@ class SabreDevStudio(object):
         opts['pointofsalecountry'] = point_of_sale
 
         if departure_date:
-            opts['departure_date'] = self.convert_date(departure_date);
+            opts['departuredate'] = self.convert_date(departure_date);
         if min_fare:
-            opts['min_fare'] = min_fare
+            opts['minfare'] = min_fare
         if max_fare:
-            opts['max_fare'] = max_fare
+            opts['maxfare'] = max_fare
 
         resp = self.request('GET',
                             sabre_endpoints['lead_price'],
@@ -313,6 +313,57 @@ class SabreDevStudio(object):
     def lead_price_opts(self, opts):
         resp = self.request('GET',
                             sabre_endpoints['lead_price'],
+                            opts)
+        
+        return resp
+
+
+    # destination_finder
+    # String -> String -> [Number] -> ResponseData 
+    # Executes a request to Sabre's "Lead Price" endpoint with the arguments specified
+    # Gives the cheapest dates and fare for the specified origin, destination
+    # and length of stay
+    def destination_finder(self, origin, destination=None, length=None,
+                           point_of_sale='US',
+                           departure_date=None, return_date=None,
+                           earliest_departure_date=None, earliest_return_date=None,
+                           min_fare=None, max_fare=None,
+                           region=None, theme=None, location=None,
+                           cost_per_mile=None,
+                           other_opts={}):
+
+        opts = other_opts.copy()
+        opts['origin'] = origin
+        opts['pointofsalecountry'] = point_of_sale
+
+        if destination:
+            opts['destination'] = destination
+        if length:
+            opts['lengthofstay'] = ','.join(map(str, length))
+        if departure_date:
+            opts['departuredate'] = self.convert_date(departure_date);
+        if return_date:
+            opts['returndate'] = self.convert_date(return_date);
+        if min_fare:
+            opts['minfare'] = min_fare
+        if max_fare:
+            opts['maxfare'] = max_fare
+
+        resp = self.request('GET',
+                            sabre_endpoints['destination_finder'],
+                            opts)
+        
+        return resp
+
+
+    # destination_finder
+    # Dictionary -> ResponseData 
+    # Executes a request to Sabre's "Lead Price" endpoint with the arguments specified
+    # Gives the cheapest dates and fare for the specified origin, destination
+    # and length of stay
+    def destination_finder_opts(self, opts):
+        resp = self.request('GET',
+                            sabre_endpoints['destination_finder'],
                             opts)
         
         return resp
