@@ -282,15 +282,19 @@ class SabreDevStudio(object):
     # Executes a request to Sabre's "Lead Price" endpoint with the arguments specified
     # Gives the cheapest dates and fare for the specified origin, destination
     # and length of stay
-    def lead_price(self, origin, destination, length,
+    def lead_price(self, origin, destination, length_of_stay,
                    point_of_sale='US', departure_date=None, min_fare=None, 
                    max_fare=None, other_opts={}):
 
         opts = other_opts.copy()
         opts['origin'] = origin
         opts['destination'] = destination
-        opts['lengthofstay'] = ','.join(map(str, length))
         opts['pointofsalecountry'] = point_of_sale
+
+        if isinstance(length_of_stay, list):
+            opts['lengthofstay'] = ','.join(map(str, length_of_stay))
+        else:
+            opts['lengthofstay'] = length_of_stay
 
         if departure_date:
             opts['departuredate'] = self.convert_date(departure_date);
@@ -323,7 +327,7 @@ class SabreDevStudio(object):
     # Executes a request to Sabre's "Lead Price" endpoint with the arguments specified
     # Gives the cheapest dates and fare for the specified origin, destination
     # and length of stay
-    def destination_finder(self, origin, destination=None, length=None,
+    def destination_finder(self, origin, destination=None, length_of_stay=None,
                            point_of_sale='US',
                            departure_date=None, return_date=None,
                            earliest_departure_date=None, earliest_return_date=None,
@@ -338,8 +342,10 @@ class SabreDevStudio(object):
 
         if destination:
             opts['destination'] = destination
-        if length:
-            opts['lengthofstay'] = ','.join(map(str, length))
+        if length_of_stay and isinstance(length_of_stay, list):
+            opts['lengthofstay'] = ','.join(map(str, length_of_stay))
+        elif length_of_stay:
+            opts['lengthofstay'] = length_of_stay
         if departure_date:
             opts['departuredate'] = self.convert_date(departure_date);
         if return_date:
@@ -359,7 +365,7 @@ class SabreDevStudio(object):
         if location:
             opts['location'] = location
         if cost_per_mile:
-            opts['pricepermile'] = float(cost_per_mile)
+            opts['pricepermile'] = cost_per_mile
 
         resp = self.request('GET',
                             sabre_endpoints['destination_finder'],
