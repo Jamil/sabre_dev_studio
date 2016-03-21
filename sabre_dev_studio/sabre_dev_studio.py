@@ -291,9 +291,9 @@ class SabreDevStudio(object):
         opts['destination'] = destination
         opts['pointofsalecountry'] = point_of_sale
 
-        if isinstance(length_of_stay, list):
+        if length_of_stay is not None and isinstance(length_of_stay, list):
             opts['lengthofstay'] = ','.join(map(str, length_of_stay))
-        else:
+        elif length_of_stay is not None:
             opts['lengthofstay'] = length_of_stay
 
         if departure_date:
@@ -342,10 +342,12 @@ class SabreDevStudio(object):
 
         if destination:
             opts['destination'] = destination
-        if length_of_stay and isinstance(length_of_stay, list):
+
+        if length_of_stay is not None and isinstance(length_of_stay, list):
             opts['lengthofstay'] = ','.join(map(str, length_of_stay))
-        elif length_of_stay:
+        elif length_of_stay is not None:
             opts['lengthofstay'] = length_of_stay
+
         if departure_date:
             opts['departuredate'] = self.convert_date(departure_date);
         if return_date:
