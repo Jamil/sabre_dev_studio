@@ -5,10 +5,7 @@ Example:
     python cheapest-destinations.py SFO
 
 Result:
-    FLL 165.62
-    MCO 165.62
-    JFK 172.36
-    LGA 191.12
+    LAS  $66.20    B6       2016-04-12 to 2016-04-12
 '''
 
 import datetime
@@ -49,31 +46,54 @@ def set_up_client():
 
 def parse_args(argv):
     city = sys.argv[1]
-    point_of_sale = sys.argv[2]
+    try:
+        point_of_sale = sys.argv[2]
+    except:
+        point_of_sale = 'US'
     return (city,point_of_sale)
 
 def main():
-    if (len(sys.argv) < 2):
-        print('Please specify IATA city or airport code as a command-line argument')
-    elif (len(sys.argv[1]) != 3):
-        print('IATA city or airport code must be 3 letters long')
+    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser.add_argument('integers', metavar='N', type=int, nargs='+',
+                                           help='an integer for the accumulator')
+    parser.add_argument('--sum', dest='accumulate', action='store_const',
+                                           const=sum, default=max,
+                                           help='sum the integers (default: find the max)')
+
+    client = set_up_client()
+
+    args = parser.parse_args()
+
+    if point_of_sale:
+        resp = client.destination_finder(city,
+                                         length_of_stay=0,
+                                         point_of_sale=point_of_sale)
     else:
-        client = set_up_client()
-        city, point_of_sale = parse_args(sys.argv)
+        resp = client.destination_finder(city,
+                                         length_of_stay=0)
 
-        if point_of_sale:
-            resp = client.destination_finder(city,
-                                             length_of_stay=0,
-                                             point_of_sale=point_of_sale)
-        else:
-            resp = client.destination_finder(city,
-                                             length_of_stay=0)
+    prices = []
+    fares = resp.fare_info
+    for fare in fares:
+        if fare.lowest_fare != 'N/A':
+            prices.append((fare.destination_location,
+                           fare.departure_date_time,
+                           fare.return_date_time,
+                           fare.lowest_fare.fare,
+                           fare.lowest_fare.airline_codes,))
 
-        prices = []
-        fares = resp.fare_info
-        for fare in fares:
-            if fare.lowest_fare != 'N/A':
-                prices.append((fare.destination_location,
-                               fare.lowest_fare.fare,
-                               fare.lowest_fare.airline_codes,))
-            
+    sorted_prices = sorted(prices, key = lambda x: x[3])
+
+    print('Lowest 20 prices:')
+    for price in sorted_prices[:20]:
+        price_round = '%.2f' % price[3]
+        out_str = "{0:4} ${1:8} {2:8} {3} to {4}".format(price[0],
+                                                         price_round,
+                                                         ' '.join(price[4]),
+                                                         price[1].split('T')[0],
+                                                         price[2].split('T')[0])
+        print(out_str)
+
+
+if __name__ == '__main__':
+main()
