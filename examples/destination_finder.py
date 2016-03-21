@@ -72,6 +72,9 @@ def main():
                         help='destination city code', default=None)
     parser.add_argument('-l', '--length-of-stay', type=int,
                         help='length of stay at destintation', default=0, nargs='+')
+    parser.add_argument('-pm', '--plus-or-minus', type=int,
+                        help='if single length of stay is specified, searches within this margin (e.g. if length of stay is 3, and this value is 2, it\'ll search for length of stay values 1, 2, 3, 4, and 5)',
+                        default=0)
     parser.add_argument('-p', '--cost-per-mile', type=float,
                         help='fare cost per mile', default=None)
     parser.add_argument('-s', '--point-of-sale', type=str,
@@ -127,10 +130,18 @@ def main():
     else:
         pos = args.point_of_sale
 
+    if len(args.length_of_stay) == 1 and args.plus_or_minus:
+        los = args.length_of_stay[0]
+        pm = args.plus_or_minus
+        length_of_stay = list(range(max(los - pm, 0),
+                                    los + pm))
+    else:
+        length_of_stay = args.length_of_stay
+
     try:
         resp = client.destination_finder(args.origin,
                                          destination=args.destination_city,
-                                         length_of_stay=args.length_of_stay,
+                                         length_of_stay=length_of_stay,
                                          point_of_sale=pos,
                                          departure_date=convert_date(args.departure_date),
                                          return_date=convert_date(args.return_date),
@@ -170,11 +181,9 @@ def main():
 
         if not args.airline:
             airline_valid = True
-        elif (isinstance(args.airline, list)):
+        else:
             intersection_airlines = set(airlines).intersection(args.airline) 
             airline_valid = len(intersection_airlines)
-        else:
-            airline_valid = args.airline in airlines
 
         if airline_valid and (not args.unique_only or not cities.get(price[0])):
             price_round = '%.2f' % price[3]
