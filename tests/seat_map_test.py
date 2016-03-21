@@ -41,10 +41,6 @@ class TestBasicSeatMap(unittest.TestCase):
 
         smap = self.sds.seat_map('JFK', 'LAX', tomorrow, 'AA', 1)
 
-        f = open('smap-args.txt', 'w')
-        f.write(json.dumps(smap._asdict()))
-        f.close()
-
         self.assertIsNotNone(smap)
 
     def test_basic_request(self):
@@ -73,10 +69,6 @@ class TestBasicSeatMap(unittest.TestCase):
         }
 
         smap = self.sds.seat_map_opts(options)
-
-        f = open('smap-out.txt', 'w')
-        f.write(json.dumps(smap._asdict()))
-        f.close()
 
         self.assertIsNotNone(smap)
         
