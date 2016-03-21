@@ -149,7 +149,7 @@ def main():
             break
         if not args.unique_only or not cities.get(price[0]):
             price_round = '%.2f' % price[3]
-            out_str = "{0:4} ${1:8} {2:8} {3} to {4}".format(price[0],
+            out_str = "{0:4} ${1:8} {2:10} {3} to {4}".format(price[0],
                                                              price_round,
                                                              ' '.join(price[4]),
                                                              price[1].split('T')[0],
