@@ -344,10 +344,22 @@ class SabreDevStudio(object):
             opts['departuredate'] = self.convert_date(departure_date);
         if return_date:
             opts['returndate'] = self.convert_date(return_date);
+        if earliest_departure_date:
+            opts['earliestdeparturedate'] = self.convert_date(earliest_departure_date);
+        if earliest_return_date:
+            opts['earliestreturndate'] = self.convert_date(earliest_return_date);
         if min_fare:
             opts['minfare'] = min_fare
         if max_fare:
             opts['maxfare'] = max_fare
+        if region:
+            opts['region'] = region
+        if theme:
+            opts['theme'] = theme
+        if location:
+            opts['location'] = location
+        if cost_per_mile:
+            opts['pricepermile'] = float(cost_per_mile)
 
         resp = self.request('GET',
                             sabre_endpoints['destination_finder'],
