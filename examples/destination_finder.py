@@ -11,6 +11,7 @@ Result:
 import datetime
 import json
 import sys
+import argparse
 
 sys.path.append('..')
 import sabre_dev_studio
@@ -44,6 +45,12 @@ def set_up_client():
     sds.authenticate()
     return sds
 
+def convert_date(d):
+    if d is not None:
+        return datetime.datetime.strptime(d, '%m-%d-%Y')
+    else:
+        return None
+
 def parse_args(argv):
     city = sys.argv[1]
     try:
@@ -53,24 +60,75 @@ def parse_args(argv):
     return (city,point_of_sale)
 
 def main():
-    parser = argparse.ArgumentParser(description='Process some integers.')
-    parser.add_argument('integers', metavar='N', type=int, nargs='+',
-                                           help='an integer for the accumulator')
-    parser.add_argument('--sum', dest='accumulate', action='store_const',
-                                           const=sum, default=max,
-                                           help='sum the integers (default: find the max)')
+    parser = argparse.ArgumentParser(description='Get destinations and fares given certain parameters.')
+    parser.add_argument('origin', type=str, help='departure city code')
+    parser.add_argument('-u', '--unique-only', action='store_true',
+                        help='only return unique cities in results', default=True)
+    parser.add_argument('-n', '--num-results', type=int,
+                        help='number of results to return', default=10)
+    parser.add_argument('-d', '--destination-city', type=str,
+                        help='destination city code', default=None)
+    parser.add_argument('-l', '--length-of-stay', type=int,
+                        help='length of stay at destintation', default=0, nargs='+')
+    parser.add_argument('-p', '--cost-per-mile', type=float,
+                        help='fare cost per mile', default=None)
+    parser.add_argument('-s', '--point-of-sale', type=str,
+                        help='point of sale country', default='US')
+    parser.add_argument('-lf', '--lowest-fare', type=int,
+                        help='minimum fare to return', default=None)
+    parser.add_argument('-hf', '--highest-fare', type=int,
+                        help='maximum fare to return', default=None)
+    parser.add_argument('-r', '--region', type=str,
+                        help='region to search', default=None, 
+                        choices=['Africa',
+                                 'Asia Pacific',
+                                 'Europe',
+                                 'Latin America',
+                                 'Middle East',
+                                 'North America'],
+                        nargs='*')
+    parser.add_argument('-t', '--theme', type=str,
+                        help='region to search', default=None, 
+                        choices=['beach', 'disney', 'gambling', 'historic',
+                                 'mountains', 'national-parks', 'outdoors',
+                                 'romantic', 'shopping', 'skiing',
+                                 'theme-park', 'caribbean'],
+                        nargs='*')
+    parser.add_argument('-c', '--country', type=str,
+                        help='only returns results from this country code',
+                        default=None)
+    parser.add_argument('-dd', '--departure-date', type=str,
+                        help='earliest departure date (MM-DD-YYYY)',
+                        default=None)
+    parser.add_argument('-rd', '--return-date', type=str,
+                        help='earliest return date (MM-DD-YYYY)',
+                        default=None)
+    parser.add_argument('-edd', '--earliest-departure', type=str,
+                        help='earliest departure date (MM-DD-YYYY)',
+                        default=None)
+    parser.add_argument('-erd', '--earliest-return', type=str,
+                        help='earliest return date (MM-DD-YYYY)',
+                        default=None)
+    args = parser.parse_args()
 
     client = set_up_client()
 
-    args = parser.parse_args()
-
-    if point_of_sale:
-        resp = client.destination_finder(city,
-                                         length_of_stay=0,
-                                         point_of_sale=point_of_sale)
-    else:
-        resp = client.destination_finder(city,
-                                         length_of_stay=0)
+    resp = client.destination_finder(args.origin,
+                                     destination=args.destination_city,
+                                     length_of_stay=args.length_of_stay,
+                                     point_of_sale=args.point_of_sale,
+                                     departure_date=convert_date(args.departure_date),
+                                     return_date=convert_date(args.return_date),
+                                     earliest_return_date=
+                                        convert_date(args.earliest_return),
+                                     earliest_departure_date=
+                                        convert_date(args.earliest_departure),
+                                     min_fare=args.lowest_fare,
+                                     max_fare=args.highest_fare,
+                                     region=args.region,
+                                     theme=args.theme,
+                                     location=args.country,
+                                     cost_per_mile=args.cost_per_mile)
 
     prices = []
     fares = resp.fare_info
@@ -84,16 +142,22 @@ def main():
 
     sorted_prices = sorted(prices, key = lambda x: x[3])
 
-    print('Lowest 20 prices:')
-    for price in sorted_prices[:20]:
-        price_round = '%.2f' % price[3]
-        out_str = "{0:4} ${1:8} {2:8} {3} to {4}".format(price[0],
-                                                         price_round,
-                                                         ' '.join(price[4]),
-                                                         price[1].split('T')[0],
-                                                         price[2].split('T')[0])
-        print(out_str)
+    count = 0
+    cities = {}
+    for price in sorted_prices:
+        if count >= args.num_results:
+            break
+        if not args.unique_only or not cities.get(price[0]):
+            price_round = '%.2f' % price[3]
+            out_str = "{0:4} ${1:8} {2:8} {3} to {4}".format(price[0],
+                                                             price_round,
+                                                             ' '.join(price[4]),
+                                                             price[1].split('T')[0],
+                                                             price[2].split('T')[0])
+            count += 1
+            cities[price[0]] = True
+            print(out_str)
 
 
 if __name__ == '__main__':
-main()
+    main()
