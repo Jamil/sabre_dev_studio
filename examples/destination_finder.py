@@ -2,7 +2,7 @@
 Finds the cheapest fares filed FROM a given city
 
 Example:
-    python cheapest-destinations.py SFO
+    python cheapest-destinations.py SFO -l 7 -l 6 -r "Asia Pacific" -lf 300
 
 Result:
     LAS  $66.20    B6       2016-04-12 to 2016-04-12
@@ -66,6 +66,8 @@ def main():
                         help='only return unique cities in results', default=True)
     parser.add_argument('-n', '--num-results', type=int,
                         help='number of results to return', default=10)
+    parser.add_argument('-a', '--airline', type=str, nargs='*',
+                        help='airline codes to search', default=None)
     parser.add_argument('-d', '--destination-city', type=str,
                         help='destination city code', default=None)
     parser.add_argument('-l', '--length-of-stay', type=int,
@@ -73,7 +75,7 @@ def main():
     parser.add_argument('-p', '--cost-per-mile', type=float,
                         help='fare cost per mile', default=None)
     parser.add_argument('-s', '--point-of-sale', type=str,
-                        help='point of sale country', default='US')
+                        help='point of sale country', default=None)
     parser.add_argument('-lf', '--lowest-fare', type=int,
                         help='minimum fare to return', default=None)
     parser.add_argument('-hf', '--highest-fare', type=int,
@@ -113,23 +115,39 @@ def main():
 
     client = set_up_client()
 
-    resp = client.destination_finder(args.origin,
-                                     destination=args.destination_city,
-                                     length_of_stay=args.length_of_stay,
-                                     point_of_sale=args.point_of_sale,
-                                     departure_date=convert_date(args.departure_date),
-                                     return_date=convert_date(args.return_date),
-                                     earliest_return_date=
-                                        convert_date(args.earliest_return),
-                                     earliest_departure_date=
-                                        convert_date(args.earliest_departure),
-                                     min_fare=args.lowest_fare,
-                                     max_fare=args.highest_fare,
-                                     region=args.region,
-                                     theme=args.theme,
-                                     location=args.country,
-                                     cost_per_mile=args.cost_per_mile)
+    # Look up city
+    city_resp = client.country_code_lookup(args.origin)
 
+    if not city_resp:
+        print("Invalid city/airport code.")
+        sys.exit(0)
+
+    if not args.point_of_sale:
+        pos = city_resp
+    else:
+        pos = args.point_of_sale
+
+    try:
+        resp = client.destination_finder(args.origin,
+                                         destination=args.destination_city,
+                                         length_of_stay=args.length_of_stay,
+                                         point_of_sale=pos,
+                                         departure_date=convert_date(args.departure_date),
+                                         return_date=convert_date(args.return_date),
+                                         earliest_return_date=
+                                            convert_date(args.earliest_return),
+                                         earliest_departure_date=
+                                            convert_date(args.earliest_departure),
+                                         min_fare=args.lowest_fare,
+                                         max_fare=args.highest_fare,
+                                         region=args.region,
+                                         theme=args.theme,
+                                         location=args.country,
+                                         cost_per_mile=args.cost_per_mile)
+    except sabre_exceptions.SabreErrorNotFound:
+        print("No results found.")
+        sys.exit(0)
+        
     prices = []
     fares = resp.fare_info
     for fare in fares:
@@ -147,16 +165,30 @@ def main():
     for price in sorted_prices:
         if count >= args.num_results:
             break
-        if not args.unique_only or not cities.get(price[0]):
+
+        airlines = price[4]
+
+        if not args.airline:
+            airline_valid = True
+        elif (isinstance(args.airline, list)):
+            intersection_airlines = set(airlines).intersection(args.airline) 
+            airline_valid = len(intersection_airlines)
+        else:
+            airline_valid = args.airline in airlines
+
+        if airline_valid and (not args.unique_only or not cities.get(price[0])):
             price_round = '%.2f' % price[3]
             out_str = "{0:4} ${1:8} {2:10} {3} to {4}".format(price[0],
                                                              price_round,
-                                                             ' '.join(price[4]),
+                                                             ' '.join(airlines),
                                                              price[1].split('T')[0],
                                                              price[2].split('T')[0])
             count += 1
             cities[price[0]] = True
             print(out_str)
+
+    if count == 0:
+        print("No results found.")
 
 
 if __name__ == '__main__':
