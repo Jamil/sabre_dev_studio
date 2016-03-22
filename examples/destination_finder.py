@@ -2,7 +2,7 @@
 Finds the cheapest fares filed FROM a given city
 
 Example:
-    python cheapest-destinations.py SFO -l 7 -l 6 -r "Asia Pacific" -lf 300
+    python cheapest-destinations.py SFO -l 0 -hf 300 -n 1
 
 Result:
     LAS  $66.20    B6       2016-04-12 to 2016-04-12
@@ -62,22 +62,25 @@ def parse_args(argv):
 def main():
     parser = argparse.ArgumentParser(description='Get destinations and fares given certain parameters.')
     parser.add_argument('origin', type=str, help='departure city code')
-    parser.add_argument('-u', '--unique-only', action='store_true',
-                        help='only return unique cities in results', default=True)
+    parser.add_argument('-nu', '--no-unique', action='store_true',
+                        help='will return duplicate cities in results', default=False)
     parser.add_argument('-n', '--num-results', type=int,
                         help='number of results to return', default=10)
+    parser.add_argument('-s', '--sort-by', type=str,
+                        help='which parameter to sort results by', default='price',
+                        choices=['price', 'cpm'])
     parser.add_argument('-a', '--airline', type=str, nargs='*',
                         help='airline codes to search', default=None)
     parser.add_argument('-d', '--destination-city', type=str,
                         help='destination city code', default=None)
     parser.add_argument('-l', '--length-of-stay', type=int,
-                        help='length of stay at destintation', default=0, nargs='+')
+                        help='length of stay at destintation', default=[0], nargs='+')
     parser.add_argument('-pm', '--plus-or-minus', type=int,
                         help='if single length of stay is specified, searches within this margin (e.g. if length of stay is 3, and this value is 2, it\'ll search for length of stay values 1, 2, 3, 4, and 5)',
                         default=0)
-    parser.add_argument('-p', '--cost-per-mile', type=float,
+    parser.add_argument('-cpm', '--cost-per-mile', type=float,
                         help='fare cost per mile', default=None)
-    parser.add_argument('-s', '--point-of-sale', type=str,
+    parser.add_argument('-ps', '--point-of-sale', type=str,
                         help='point of sale country', default=None)
     parser.add_argument('-lf', '--lowest-fare', type=int,
                         help='minimum fare to return', default=None)
@@ -146,9 +149,9 @@ def main():
                                          departure_date=convert_date(args.departure_date),
                                          return_date=convert_date(args.return_date),
                                          earliest_return_date=
-                                            convert_date(args.earliest_return),
+                                         convert_date(args.earliest_return),
                                          earliest_departure_date=
-                                            convert_date(args.earliest_departure),
+                                         convert_date(args.earliest_departure),
                                          min_fare=args.lowest_fare,
                                          max_fare=args.highest_fare,
                                          region=args.region,
@@ -167,9 +170,13 @@ def main():
                            fare.departure_date_time,
                            fare.return_date_time,
                            fare.lowest_fare.fare,
-                           fare.lowest_fare.airline_codes,))
+                           fare.lowest_fare.airline_codes,
+                           fare.price_per_mile))
 
-    sorted_prices = sorted(prices, key = lambda x: x[3])
+    if args.sort_by == 'price':
+        sorted_prices = sorted(prices, key = lambda x: x[3])
+    else:
+        sorted_prices = sorted(prices, key = lambda x: x[5])
 
     count = 0
     cities = {}
@@ -185,13 +192,31 @@ def main():
             intersection_airlines = set(airlines).intersection(args.airline) 
             airline_valid = len(intersection_airlines)
 
-        if airline_valid and (not args.unique_only or not cities.get(price[0])):
+        if args.no_unique:
+            uniqueness_valid = True
+        else:
+            uniqueness_valid = cities.get(price[0]) is None
+
+        if airline_valid and uniqueness_valid:
             price_round = '%.2f' % price[3]
-            out_str = "{0:4} ${1:8} {2:10} {3} to {4}".format(price[0],
-                                                             price_round,
-                                                             ' '.join(airlines),
-                                                             price[1].split('T')[0],
-                                                             price[2].split('T')[0])
+            cpm_round = '%.2f' % price[5]
+
+            if args.sort_by == 'cpm' or args.cost_per_mile:
+                fstring = "{0:4} ${1:8} {2:4} cpm    {3:10} {4} to {5}"
+                out_str = fstring.format(price[0],
+                                         price_round,
+                                         cpm_round,
+                                         ' '.join(airlines),
+                                         price[1].split('T')[0],
+                                         price[2].split('T')[0])
+            else:
+                fstring = "{0:4} ${1:8} {2:10} {3} to {4}"
+                out_str = fstring.format(price[0],
+                                         price_round,
+                                         ' '.join(airlines),
+                                         price[1].split('T')[0],
+                                         price[2].split('T')[0])
+                
             count += 1
             cities[price[0]] = True
             print(out_str)
