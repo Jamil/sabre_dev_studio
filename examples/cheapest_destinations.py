@@ -2,7 +2,7 @@
 Finds the cheapest fares filed to a given city
 
 Example:
-    python cheapest-destinations.py YTO
+    python cheapest-destinations.py YTO CA
 
 Result:
     FLL 165.62
