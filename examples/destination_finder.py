@@ -12,6 +12,7 @@ import datetime
 import json
 import sys
 import argparse
+import random
 
 sys.path.append('..')
 import sabre_dev_studio
@@ -68,7 +69,7 @@ def main():
                         help='number of results to return', default=10)
     parser.add_argument('-s', '--sort-by', type=str,
                         help='which parameter to sort results by', default='price',
-                        choices=['price', 'cpm'])
+                        choices=['price', 'cpm', 'random'])
     parser.add_argument('-a', '--airline', type=str, nargs='*',
                         help='airline codes to search', default=None)
     parser.add_argument('-d', '--destination-city', type=str,
@@ -175,8 +176,12 @@ def main():
 
     if args.sort_by == 'price':
         sorted_prices = sorted(prices, key = lambda x: x[3])
-    else:
+    elif args.sort_by == 'cpm':
         sorted_prices = sorted(prices, key = lambda x: x[5])
+    else:
+        sorted_prices = prices
+        random.shuffle(sorted_prices)
+    
 
     count = 0
     cities = {}
