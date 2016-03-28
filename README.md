@@ -69,7 +69,7 @@ Don't worry, the test suite won't make too many requests, and won't have a huge 
 
 ## Examples
 
-There are example utilities in the `examples/` directory. For example, the `cheapest_destinations.py` tool finds the cheapest roundtrip airfares to a given airport. Luckily, most domestic (US) airfares are roundtrip, so this effectively works as both a 'Flights To' and 'Flights From' finder.
+There are example utilities in the `examples/` directory. For example, the `cheapest_destinations.py` tool finds the cheapest roundtrip airfares to a given airport. 
 
 ```
 python cheapest-destinations.py SFO
