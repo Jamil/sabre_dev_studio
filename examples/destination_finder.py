@@ -2,7 +2,7 @@
 Finds the cheapest fares filed FROM a given city
 
 Example:
-    python cheapest-destinations.py SFO -l 0 -hf 300 -n 1
+    python destination_finder.py SFO -l 0 -hf 300 -n 1
 
 Result:
     LAS  $66.20    B6       2016-04-12 to 2016-04-12
