@@ -58,10 +58,10 @@ Functions for other endpoints may have both convenience functions, taking parame
 
 There are tests in the `tests/` folder. In order for these to run properly, a `config.json` file must be included, with contents of the form:
 
-```
+```json
 {
-	"sabre_client_id": -----,
-	"sabre_client_secret": -----
+	"sabre_client_id": "MY_SECRET_KEY",
+	"sabre_client_secret": "MY_SECRET"
 }
 ```
 
