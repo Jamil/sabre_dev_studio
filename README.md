@@ -95,3 +95,11 @@ python seat-maps.py JFK LAX 05-01-2016 AA 1
 ```
 
 I find that this only works for American Airlines and perhaps other carriers that use SABRE, but even with AA there are some Internal Server Errors.
+
+The most comprehensive example is `destination_finder.py`, which is a powerful flight search tool. You can run `python destination_finder.py --help` for more information. You can do, for example:
+
+```
+python destination_finder.py SFO --length-of-stay 7 --highest-fare 1000 --region "Asia Pacific" "Africa" --sort-by price --cost-per-mile 0.20 --earliest-departure 08-01-2016
+```
+
+And more advanced queries like that!
