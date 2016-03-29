@@ -115,8 +115,8 @@ def main():
     parser.add_argument('-edd', '--earliest-departure', type=str,
                         help='earliest departure date (MM-DD-YYYY)',
                         default=None)
-    parser.add_argument('-erd', '--earliest-return', type=str,
-                        help='earliest return date (MM-DD-YYYY)',
+    parser.add_argument('-ldd', '--latest-departure', type=str,
+                        help='latest departure date (MM-DD-YYYY)',
                         default=None)
     args = parser.parse_args()
 
@@ -149,8 +149,8 @@ def main():
                                          point_of_sale=pos,
                                          departure_date=convert_date(args.departure_date),
                                          return_date=convert_date(args.return_date),
-                                         earliest_return_date=
-                                         convert_date(args.earliest_return),
+                                         latest_departure_date=
+                                         convert_date(args.latest_departure),
                                          earliest_departure_date=
                                          convert_date(args.earliest_departure),
                                          min_fare=args.lowest_fare,
