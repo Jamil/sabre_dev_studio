@@ -354,7 +354,7 @@ class SabreDevStudio(object):
             opts['returndate'] = self.convert_date(return_date);
         if earliest_departure_date:
             opts['earliestdeparturedate'] = self.convert_date(earliest_departure_date);
-        if earliest_return_date:
+        if latest_departure_date:
             opts['latestdeparturedate'] = self.convert_date(earliest_return_date);
         if min_fare:
             opts['minfare'] = min_fare
