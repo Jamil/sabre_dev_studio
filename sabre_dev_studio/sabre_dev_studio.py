@@ -330,7 +330,7 @@ class SabreDevStudio(object):
     def destination_finder(self, origin, destination=None, length_of_stay=None,
                            point_of_sale='US',
                            departure_date=None, return_date=None,
-                           earliest_departure_date=None, earliest_return_date=None,
+                           earliest_departure_date=None, latest_departure_date=None,
                            min_fare=None, max_fare=None,
                            region=None, theme=None, location=None,
                            cost_per_mile=None,
@@ -355,7 +355,7 @@ class SabreDevStudio(object):
         if earliest_departure_date:
             opts['earliestdeparturedate'] = self.convert_date(earliest_departure_date);
         if earliest_return_date:
-            opts['earliestreturndate'] = self.convert_date(earliest_return_date);
+            opts['latestdeparturedate'] = self.convert_date(earliest_return_date);
         if min_fare:
             opts['minfare'] = min_fare
         if max_fare:
@@ -387,3 +387,28 @@ class SabreDevStudio(object):
                             opts)
         
         return resp
+
+    # country_code_lookup
+    # String -> String?
+    # Finds a country code given an airport/city code
+    def country_code_lookup(self, code):
+        opts = [{
+            "GeoCodeRQ": {
+                "PlaceById": {
+                    "Id": code,
+                    "BrowseCategory": {
+                        "name": "AIR"
+                    }
+                }
+            }
+        }]
+
+        try:
+            resp = self.request('POST',
+                                sabre_endpoints['geo_code'],
+                                json.dumps(opts, sort_keys=True),
+                                additional_headers={'Content-Type': 'application/json'})
+            code = resp.results[0].geo_code_rs.place[0].country
+            return code
+        except:
+            return None
