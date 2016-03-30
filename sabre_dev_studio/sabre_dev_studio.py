@@ -422,3 +422,39 @@ class SabreDevStudio(object):
                             opts)
         
         return resp
+
+    # top_destinations
+    # Dictionary -> ResponseData 
+    # Executes a request to Sabre's "Top Destinations" endpoint with the 
+    # options specified. Returns most popular destinations based on the params.
+    # origin is 2 characters => interpreted as country
+    # origin is 3 characters => interpreted as city
+    # destinationtype = ['DOMESTIC', 'INTERNATIONAL', 'OVERALL']
+    # weeks is the number of weeks to look back for data
+    def top_destinations_opts(self, origin, destination_type=None,
+                              theme=None, num_results=20, destination_country=None,
+                              region=None, weeks=2):
+
+        opts = {}
+        if len(origin) == 2:
+            opts['origincountry'] = origin
+        else:
+            opts['origin'] = origin
+
+        if destination_type:
+            opts['destinationtype'] = destination_type
+        if theme:
+            opts['theme'] = theme
+        if num_results:
+            opts['topdestinations'] = num_results
+        if destination_country:
+            opts['destinationcountry'] = destination_country
+        if region:
+            opts['region'] = region
+        if weeks:
+            opts['lookbackweeks'] = weeks
+
+        resp = self.request('GET',
+                            sabre_endpoints['top_destinations'],
+                            opts)
+        return resp
