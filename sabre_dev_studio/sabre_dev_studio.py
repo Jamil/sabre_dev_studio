@@ -378,9 +378,8 @@ class SabreDevStudio(object):
 
     # destination_finder_opts
     # Dictionary -> ResponseData 
-    # Executes a request to Sabre's "Lead Price" endpoint with the arguments specified
-    # Gives the cheapest dates and fare for the specified origin, destination
-    # and length of stay
+    # Executes a request to Sabre's "Lead Price" endpoint with the options specified
+    # as query parameters
     def destination_finder_opts(self, opts):
         resp = self.request('GET',
                             sabre_endpoints['destination_finder'],
