@@ -376,7 +376,7 @@ class SabreDevStudio(object):
         return resp
 
 
-    # destination_finder
+    # destination_finder_opts
     # Dictionary -> ResponseData 
     # Executes a request to Sabre's "Lead Price" endpoint with the arguments specified
     # Gives the cheapest dates and fare for the specified origin, destination
