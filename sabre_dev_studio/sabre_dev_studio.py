@@ -432,8 +432,8 @@ class SabreDevStudio(object):
     # destinationtype = ['DOMESTIC', 'INTERNATIONAL', 'OVERALL']
     # weeks is the number of weeks to look back for data
     def top_destinations(self, origin, destination_type=None,
-                              theme=None, num_results=20, destination_country=None,
-                              region=None, weeks=2):
+                         theme=None, num_results=20, destination_country=None,
+                         region=None, weeks=2):
 
         opts = {}
         if len(origin) == 2:
