@@ -412,17 +412,6 @@ class SabreDevStudio(object):
         except:
             return None
 
-    # top_destinations_opts
-    # Dictionary -> ResponseData 
-    # Executes a request to Sabre's "Top Destinations" endpoint with the 
-    # options specified as query parameters. 
-    def top_destinations_opts(self, opts):
-        resp = self.request('GET',
-                            sabre_endpoints['top_destinations'],
-                            opts)
-        
-        return resp
-
     # top_destinations
     # Dictionary -> ResponseData 
     # Executes a request to Sabre's "Top Destinations" endpoint with the 
@@ -457,4 +446,15 @@ class SabreDevStudio(object):
         resp = self.request('GET',
                             sabre_endpoints['top_destinations'],
                             opts)
+        return resp
+
+    # top_destinations_opts
+    # Dictionary -> ResponseData 
+    # Executes a request to Sabre's "Top Destinations" endpoint with the 
+    # options specified as query parameters. 
+    def top_destinations_opts(self, opts):
+        resp = self.request('GET',
+                            sabre_endpoints['top_destinations'],
+                            opts)
+        
         return resp
