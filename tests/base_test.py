@@ -7,6 +7,7 @@ sys.path.append('..')
 
 import sabre_dev_studio
 import sabre_dev_studio.sabre_exceptions as sabre_exceptions
+import sabre_dev_studio.sabre_utils as sabre_utils
 
 '''
 Tests for the SabreDevStudio base class
@@ -142,8 +143,7 @@ class TestBasicSabreDevStudio(unittest.TestCase):
         now = datetime.datetime.now()
         string_representation = now.strftime('%Y-%m-%d')
 
-        sds = sabre_dev_studio.SabreDevStudio()
-        self.assertEqual(sds.convert_date(now), string_representation)
+        self.assertEqual(sabre_utils.convert_date(now), string_representation)
 
 if __name__ == '__main__':
     unittest.main()

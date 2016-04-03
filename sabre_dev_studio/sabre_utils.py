@@ -12,7 +12,7 @@ from sabre_endpoints import sabre_endpoints
 # convert_date
 # datetime -> str
 # Converts a Python date object to a Sabre-compatible date string
-def convert_date(self, date):
+def convert_date(date):
     return date.strftime('%Y-%m-%d')
 
 # convert_keys

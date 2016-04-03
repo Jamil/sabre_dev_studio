@@ -6,6 +6,7 @@ import sys
 sys.path.append('..')
 import sabre_dev_studio
 import sabre_dev_studio.sabre_exceptions as sabre_exceptions
+import sabre_dev_studio.sabre_utils as sabre_utils
 
 '''
 requires config.json in the same directory for api authentication

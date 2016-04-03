@@ -212,7 +212,7 @@ class SabreDevStudio(object):
                         "destination": destination,
                         "origin": origin,
                         "DepartureDate": {
-                            "content": self.convert_date(departure_date)
+                            "content": sabre_utils.convert_date(departure_date)
                         },
                         "Marketing": [{
                             "carrier": carrier,
@@ -392,3 +392,28 @@ class SabreDevStudio(object):
                             opts)
         
         return resp
+
+    # country_code_lookup
+    # String -> String?
+    # Finds a country code given an airport/city code
+    def country_code_lookup(self, code):
+        opts = [{
+            "GeoCodeRQ": {
+                "PlaceById": {
+                    "Id": code,
+                    "BrowseCategory": {
+                        "name": "AIR"
+                    }
+                }
+            }
+        }]
+
+        try:
+            resp = self.request('POST',
+                                sabre_endpoints['geo_code'],
+                                json.dumps(opts, sort_keys=True),
+                                additional_headers={'Content-Type': 'application/json'})
+            code = resp.results[0].geo_code_rs.place[0].country
+            return code
+        except:
+            return None
