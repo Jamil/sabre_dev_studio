@@ -124,7 +124,7 @@ def main():
     client = set_up_client()
 
     # Look up city
-    city_resp = sabre_utils.country_code_lookup(args.origin)
+    city_resp = client.country_code_lookup(args.origin)
 
     if not city_resp:
         print("Invalid city/airport code.")
