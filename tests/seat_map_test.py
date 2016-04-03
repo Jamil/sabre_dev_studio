@@ -58,7 +58,7 @@ class TestBasicSeatMap(unittest.TestCase):
                         "destination": "EZE",
                         "origin": "DFW",
                         "DepartureDate": {
-                            "content": "2016-03-20"
+                            "content": tomorrow_str
                         },
                         "Marketing": [{
                             "carrier": "AA",
