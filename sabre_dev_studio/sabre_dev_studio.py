@@ -205,13 +205,19 @@ class SabreDevStudio(object):
     # Gives the cheapest dates and fare for the specified origin, destination
     # and length of stay
     def lead_price(self, origin, destination, length_of_stay,
-                   point_of_sale='US', departure_date=None, min_fare=None, 
+                   point_of_sale=None, departure_date=None, min_fare=None, 
                    max_fare=None, other_opts={}):
 
         opts = other_opts.copy()
         opts['origin'] = origin
         opts['destination'] = destination
-        opts['pointofsalecountry'] = point_of_sale
+        
+        if point_of_sale:
+            opts['pointofsalecountry'] = point_of_sale
+        else:
+            # Get point of sale country for origin
+            result = country_code_lookup(origin)
+            opts['pointofsalecountry'] = result
 
         if length_of_stay is not None and isinstance(length_of_stay, list):
             opts['lengthofstay'] = ','.join(map(str, length_of_stay))
