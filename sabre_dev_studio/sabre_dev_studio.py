@@ -199,43 +199,6 @@ class SabreDevStudio(object):
 
         return resp
 
-    # seat_map
-    # String -> String -> String -> DateTime -> String -> ResponseData
-    # Executes a request to Sabre's "Seat Map" endpoint with the arguments specified
-    # For more advanced usage, use seat_map_opts to specify custom options
-    def seat_map(self, origin, destination, departure_date, carrier, flt_num):
-        opts = {
-            "EnhancedSeatMapRQ": {
-                "SeatMapQueryEnhanced": {
-                    "RequestType": "Payload",
-                    "Flight": {
-                        "destination": destination,
-                        "origin": origin,
-                        "DepartureDate": {
-                            "content": sabre_utils.convert_date(departure_date)
-                        },
-                        "Marketing": [{
-                            "carrier": carrier,
-                            "content": str(flt_num)
-                        }]
-                    }
-                }
-            }
-        }
-        return self.seat_map_opts(opts)
-
-    # seat_map
-    # Dictionary -> ResponseData 
-    # Executes a request to Sabre's "Seat Map" endpoint with the arguments specified
-    # For more advanced usage, use seat_map_opts to specify custom options
-    def seat_map_opts(self, opts):
-        resp = self.request('POST',
-                            sabre_endpoints['seat_map'],
-                            json.dumps(opts, sort_keys=True),
-                            additional_headers={'Content-Type': 'application/json'})
-        
-        return resp
-
     # lead_price
     # String -> String -> [Number] -> ResponseData 
     # Executes a request to Sabre's "Lead Price" endpoint with the arguments specified
