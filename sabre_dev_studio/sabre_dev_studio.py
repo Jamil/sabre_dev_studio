@@ -250,7 +250,7 @@ class SabreDevStudio(object):
     # Gives the cheapest dates and fare for the specified origin, destination
     # and length of stay
     def destination_finder(self, origin, destination=None, length_of_stay=None,
-                           point_of_sale='US',
+                           point_of_sale=None,
                            departure_date=None, return_date=None,
                            earliest_departure_date=None, latest_departure_date=None,
                            min_fare=None, max_fare=None,
@@ -260,7 +260,13 @@ class SabreDevStudio(object):
 
         opts = other_opts.copy()
         opts['origin'] = origin
-        opts['pointofsalecountry'] = point_of_sale
+
+        if point_of_sale:
+            opts['pointofsalecountry'] = point_of_sale
+        else:
+            # Get point of sale country for origin
+            result = country_code_lookup(origin)
+            opts['pointofsalecountry'] = result
 
         if destination:
             opts['destination'] = destination
