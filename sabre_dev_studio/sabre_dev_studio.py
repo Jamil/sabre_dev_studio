@@ -217,7 +217,7 @@ class SabreDevStudio(object):
         else:
             # Get point of sale country for origin
             result = country_code_lookup(origin)
-            opts['pointofsalecountry'] = result
+            opts['pointofsalecountry'] = result if result else 'US'
 
         if length_of_stay is not None and isinstance(length_of_stay, list):
             opts['lengthofstay'] = ','.join(map(str, length_of_stay))
@@ -272,7 +272,7 @@ class SabreDevStudio(object):
         else:
             # Get point of sale country for origin
             result = country_code_lookup(origin)
-            opts['pointofsalecountry'] = result
+            opts['pointofsalecountry'] = result if result else 'US'
 
         if destination:
             opts['destination'] = destination
