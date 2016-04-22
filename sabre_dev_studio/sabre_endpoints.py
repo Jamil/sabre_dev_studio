@@ -8,5 +8,8 @@ sabre_endpoints = {
     'geo_code': '/v1/lists/utilities/geocode/locations',
 
     # Air Intelligence
-    'top_destinations': '/v1/lists/top/destinations'
+    'top_destinations': '/v1/lists/top/destinations',
+
+    # Air Utility
+    'alliance_lookup': '/v1/lists/utilities/airlines/alliances/'
 }
