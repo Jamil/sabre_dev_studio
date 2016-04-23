@@ -392,3 +392,14 @@ class SabreDevStudio(object):
             return code
         except:
             return None
+
+
+    # alliance_lookup
+    def alliance_lookup(self, alliance_code):
+        if alliance_code not in ['*A', '*O', '*S']:
+            return None
+        else:
+            resp = self.request('GET',
+                                sabre_endpoints['alliance_lookup'],
+                                { 'alliancecode': alliance_code })
+            return resp
