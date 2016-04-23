@@ -73,6 +73,9 @@ def main():
                         choices=['price', 'cpm', 'random'])
     parser.add_argument('-a', '--airline', type=str, nargs='*',
                         help='airline codes to search', default=None)
+    parser.add_argument('-al', '--alliance', type=str,
+                        help='airline alliance to search', default=None,
+                        choices=['oneworld', 'star', 'skyteam'])
     parser.add_argument('-d', '--destination-city', type=str,
                         help='destination city code', default=None)
     parser.add_argument('-l', '--length-of-stay', type=int,
@@ -123,6 +126,24 @@ def main():
 
     client = set_up_client()
 
+    # Map airline alliance to Sabre's unintuitive code
+    if args.alliance:
+        if args.alliance == 'star':
+            alliance = '*A'
+        if args.alliance == 'oneworld':
+            alliance = '*O'
+        if args.alliance == 'skyteam':
+            alliance = '*S'
+        
+        # Look up airlines
+        res = client.alliance_lookup('*A')
+        airline_data = res.alliance_info[0].airline_info
+        airline_codes = map(lambda rd: rd.airline_code, airline_data)
+        if args.airline:
+            args.airline += airline_codes
+        else:
+            args.airline = airline_codes
+    
     # Look up city
     city_resp = client.country_code_lookup(args.origin)
 
