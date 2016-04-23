@@ -130,13 +130,13 @@ def main():
     if args.alliance:
         if args.alliance == 'star':
             alliance = '*A'
-        if args.alliance == 'oneworld':
+        elif args.alliance == 'oneworld':
             alliance = '*O'
-        if args.alliance == 'skyteam':
+        elif args.alliance == 'skyteam':
             alliance = '*S'
         
         # Look up airlines
-        res = client.alliance_lookup('*A')
+        res = client.alliance_lookup(alliance)
         airline_data = res.alliance_info[0].airline_info
         airline_codes = map(lambda rd: rd.airline_code, airline_data)
         if args.airline:
