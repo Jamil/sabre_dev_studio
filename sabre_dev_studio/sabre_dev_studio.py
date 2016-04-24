@@ -29,6 +29,21 @@ class SabreDevStudio(object):
         else: # default to test
             self.host = 'https://api.test.sabre.com'
 
+    # init_with_config
+    # () -> ()
+    # Initializes the class with an ID and secret from a config file
+    # Useful for testing and interactive mode
+    def init_with_config(self, config_file='config.json'):
+        raw_data = open(config_file).read()
+
+        data = json.loads(raw_data)
+
+        client_secret = data['sabre_client_secret']
+        client_id = data['sabre_client_id']
+
+        self.set_credentials(client_id, client_secret)
+        self.authenticate()
+
     # make_endpoint
     # String -> String
     # Converts a relative endpoint to an absolute URI
