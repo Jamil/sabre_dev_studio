@@ -425,6 +425,6 @@ class SabreDevStudio(object):
     # Returns the aircraft name associated with a specified IATA aircraft equipment code
     def equipment_lookup(self, aircraft_code):
         resp = self.request('GET',
-                            sabre_endpoints['aircraft_lookup'],
+                            sabre_endpoints['equipment_lookup'],
                             { 'aircraftcode': aircraft_code })
         return resp
