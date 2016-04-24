@@ -29,7 +29,6 @@ class SabreDevStudio(object):
         else: # default to test
             self.host = 'https://api.test.sabre.com'
 
-
     # make_endpoint
     # String -> String
     # Converts a relative endpoint to an absolute URI
@@ -395,6 +394,8 @@ class SabreDevStudio(object):
 
 
     # alliance_lookup
+    # String -> ResponseData
+    # Gets a list of airlines for a given alliance
     def alliance_lookup(self, alliance_code):
         if alliance_code not in ['*A', '*O', '*S']:
             return None
@@ -403,3 +404,12 @@ class SabreDevStudio(object):
                                 sabre_endpoints['alliance_lookup'],
                                 { 'alliancecode': alliance_code })
             return resp
+
+    # equipment_lookup
+    # String -> ResponseData
+    # Returns the aircraft name associated with a specified IATA aircraft equipment code
+    def equipment_lookup(self, aircraft_code):
+        resp = self.request('GET',
+                            sabre_endpoints['aircraft_lookup'],
+                            { 'aircraftcode': aircraft_code })
+        return resp
