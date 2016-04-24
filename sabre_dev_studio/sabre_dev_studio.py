@@ -421,10 +421,13 @@ class SabreDevStudio(object):
             return resp
 
     # equipment_lookup
-    # String -> ResponseData
+    # String -> String
     # Returns the aircraft name associated with a specified IATA aircraft equipment code
     def equipment_lookup(self, aircraft_code):
         resp = self.request('GET',
                             sabre_endpoints['equipment_lookup'],
                             { 'aircraftcode': aircraft_code })
-        return resp
+        try:
+            return resp.aircraft_info[0].aircraft_name
+        except:
+            return None
