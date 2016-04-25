@@ -431,3 +431,12 @@ class SabreDevStudio(object):
             return resp.aircraft_info[0].aircraft_name
         except:
             return None
+
+    # multi_city_airport_lookup
+    # String -> ResponseData
+    # Returns the cities in a given country (supplied as a two-letter country code)
+    def equipment_lookup(self, country_code):
+        resp = self.request('GET',
+                            sabre_endpoints['multi_city_airport_lookup'],
+                            { 'country': country_code })
+        return resp
