@@ -16,7 +16,7 @@ requires config.json in the same directory for api authentication
 }
 
 '''
-class TestBasicAllianceLookup(unittest.TestCase):
+class TestAirUtilities(unittest.TestCase):
     def read_config(self):
         raw_data = open('config.json').read()
 
@@ -34,7 +34,7 @@ class TestBasicAllianceLookup(unittest.TestCase):
         self.sds.set_credentials(self.client_id, self.client_secret)
         self.sds.authenticate()
 
-    def test_request(self):
+    def test_alliance_request(self):
         res = self.sds.alliance_lookup('*A')
         
         airline_data = res.alliance_info[0].airline_info
