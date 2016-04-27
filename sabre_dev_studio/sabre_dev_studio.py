@@ -439,4 +439,4 @@ class SabreDevStudio(object):
         resp = self.request('GET',
                             sabre_endpoints['multi_city_airport_lookup'],
                             { 'country': country_code })
-        return resp
+        return resp.cities if resp else None
