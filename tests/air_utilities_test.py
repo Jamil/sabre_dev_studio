@@ -50,6 +50,12 @@ class TestAirUtilities(unittest.TestCase):
         res = self.sds.equipment_lookup('CR9')
 
         self.assertEqual(res, 'CANADAIR REGIONAL')
+        
+    def test_multi_city_airport_lookup(self):
+        res = self.sds.multi_city_airport_lookup('GB')
+        codes = map(lambda c: c.code, res)
+
+        self.assertTrue('LON' in codes)
 
 if __name__ == '__main__':
     unittest.main()
