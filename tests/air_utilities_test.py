@@ -46,6 +46,10 @@ class TestAirUtilities(unittest.TestCase):
         # and the function works ;)
         self.assertTrue('AC' in airline_codes)
 
+    def test_equipment_lookup(self):
+        res = self.sds.equipment_lookup('CR9')
+
+        self.assertEqual(res, 'CANADAIR REGIONAL')
 
 if __name__ == '__main__':
     unittest.main()
