@@ -35,6 +35,12 @@ sds.set_credentials('MYCLIENTID', 'MYCLIENTSECRET')
 sds.authenticate()
 ```
 
+A quick convenience initializer is provided to read the Client ID and Secret from a JSON file, by default named `config.json`. This JSON file should have keys `sabre_client_id` and `sabre_client_secret`.
+
+```python
+sds.init_with_config('my_credentials.json')
+```
+
 After this, you should be ready to start issuing requests. Just call one of the supported methods, like `instaflights()`, or issue a request manually with a relative endpoint using `request(method, endpoint, payload)`, where payload is either the data (in the case of `PUT`, `POST`, or `PATCH`, or the query params (in the case of `GET`).
 
 ```python
