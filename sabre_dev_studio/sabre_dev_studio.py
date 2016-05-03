@@ -440,3 +440,15 @@ class SabreDevStudio(object):
                             sabre_endpoints['multi_city_airport_lookup'],
                             { 'country': country_code })
         return resp.cities if resp else None
+
+
+    # countries_lookup
+    # String -> ResponseData
+    # Returns the valid origin/destination countries for a given point of sale
+    # Origin countries: resp.origin_countries
+    # Destination countries: resp.destination_countries
+    def countries_lookup(self, point_of_sale='US'):
+        resp = self.request('GET',
+                            sabre_endpoints['countries_lookup'],
+                            { 'pointofsalecountry': point_of_sale })
+        return resp
