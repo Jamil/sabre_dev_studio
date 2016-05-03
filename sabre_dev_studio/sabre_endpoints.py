@@ -13,5 +13,9 @@ sabre_endpoints = {
     # Air Utility
     'alliance_lookup': '/v1/lists/utilities/airlines/alliances/',
     'equipment_lookup': '/v1/lists/utilities/aircraft/equipment/',
-    'multi_city_airport_lookup': '/v1/lists/supported/cities'
+    'multi_city_airport_lookup': '/v1/lists/supported/cities',
+    'countries_lookup': 'UNIMPLEMENTED',
+    'city_pairs_lookup': 'UNIMPLEMENTED',
+    'travel_theme_lookup': 'UNIMPLEMENTED',
+    'airports_at_cities_lookup': 'UNIMPLEMENTED'
 }
