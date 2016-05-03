@@ -57,5 +57,13 @@ class TestAirUtilities(unittest.TestCase):
 
         self.assertTrue('LON' in codes)
 
+    def test_multi_city_airport_lookup(self):
+        res = self.sds.countries_lookup('GB')
+        origin_names = map(lambda c: c.country_name, res.origin_countries)
+        destination_names = map(lambda c: c.country_name, res.destination_countries)
+
+        self.assertTrue('United Kingdom' in origin_names)
+        self.assertTrue('United Kingdom' in destination_names)
+
 if __name__ == '__main__':
     unittest.main()
