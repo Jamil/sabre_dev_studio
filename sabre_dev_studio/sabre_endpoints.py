@@ -15,7 +15,9 @@ sabre_endpoints = {
     'equipment_lookup': '/v1/lists/utilities/aircraft/equipment/',
     'multi_city_airport_lookup': '/v1/lists/supported/cities',
     'countries_lookup': '/v1/lists/supported/countries',
-    'city_pairs_lookup': 'UNIMPLEMENTED',
+    'city_pairs_shop_lookup': '/v1/lists/supported/shop/flights/origins-destinations',
+    'city_pairs_historical_lookup': '/v1/lists/supported/historical/flights/origins-destinations',
+    'city_pairs_forecast_lookup': '/v1/lists/supported/forecast/flights/origins-destinations',
     'travel_theme_lookup': 'UNIMPLEMENTED',
     'airports_at_cities_lookup': 'UNIMPLEMENTED'
 }

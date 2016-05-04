@@ -1,20 +1,26 @@
+class SabreClientError(Exception):
+    pass
+
 # Authentication requested, but no credentials (client ID, client secret) provided
-class NoCredentialsProvided(Exception):
+class NoCredentialsProvided(SabreClientError):
     pass
 
 # Did not request token
-class NotAuthorizedError(Exception):
+class NotAuthorizedError(SabreClientError):
     pass
 
-class UnsupportedMethodError(Exception):
+class UnsupportedMethodError(SabreClientError):
+    pass
+
+class InvalidInputError(SabreClientError):
     pass
 
 # Base API Exception
-class SabreDevStudioException(Exception):
+class SabreDevStudioAPIException(Exception):
     def __init__(self, e=None):
         if isinstance(e, dict):
             message = e.get('message')
-            super(SabreDevStudioException, self).__init__(message)
+            super(SabreDevStudioAPIException, self).__init__(message)
 
             self.message = message
             self.status = e.get('status')
@@ -24,7 +30,7 @@ class SabreDevStudioException(Exception):
         elif isinstance(e, str):
             self.message = e
         else:
-            super(SabreDevStudioException, self).__init__()
+            super(SabreDevStudioAPIException, self).__init__()
 
     def __unicode__(self):
         if self.message and self.status:
@@ -41,41 +47,41 @@ class SabreDevStudioException(Exception):
 
 
 # 400
-class SabreErrorBadRequest(SabreDevStudioException):
+class SabreErrorBadRequest(SabreDevStudioAPIException):
     pass
 
 # 401
-class SabreErrorUnauthorized(SabreDevStudioException):
+class SabreErrorUnauthorized(SabreDevStudioAPIException):
     pass
 
 # 403
-class SabreErrorForbidden(SabreDevStudioException):
+class SabreErrorForbidden(SabreDevStudioAPIException):
     pass
 
 # 404
-class SabreErrorNotFound(SabreDevStudioException):
+class SabreErrorNotFound(SabreDevStudioAPIException):
     pass
 
 # 404
-class SabreErrorMethodNotAllowed(SabreDevStudioException):
+class SabreErrorMethodNotAllowed(SabreDevStudioAPIException):
     pass
 
 # 406
-class SabreErrorNotAcceptable(SabreDevStudioException):
+class SabreErrorNotAcceptable(SabreDevStudioAPIException):
     pass
 
 # 429
-class SabreErrorRateLimited(SabreDevStudioException):
+class SabreErrorRateLimited(SabreDevStudioAPIException):
     pass
 
 # 500
-class SabreInternalServerError(SabreDevStudioException):
+class SabreInternalServerError(SabreDevStudioAPIException):
     pass
 
 # 503
-class SabreErrorServiceUnavailable(SabreDevStudioException):
+class SabreErrorServiceUnavailable(SabreDevStudioAPIException):
     pass
 
 # 504
-class SabreErrorGatewayTimeout(SabreDevStudioException): 
+class SabreErrorGatewayTimeout(SabreDevStudioAPIException): 
     pass
