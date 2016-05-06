@@ -457,15 +457,30 @@ class SabreDevStudio(object):
     # String -> ResponseData
     # Returns the valid origin/destination city pairs for
     # a given point of sale & country
-    def city_pairs_lookup(self, endpoint, country):
+    def city_pairs_lookup(self, endpoint, point_of_sale=None, origin_country=None,
+                          destination_country=None, origin_region=None,
+                          destination_region=None):
         if endpoint not in ['shop', 'historical', 'forecast']:
             error_string = "Invalid endpoint %s specified for city pairs lookup" % endpoint
-            raise InvalidInputError(error_string)
+            raise sabre_exceptions.InvalidInputError(error_string)
+        else:
+            endpoint = 'city_pairs_' + endpoint + '_lookup'
+
+        opts = {
+            'pointofsalecountry': point_of_sale,
+        }
+
+        if origin_country:
+            opts['origincountry'] = origin_country
+        if destination_country:
+            opts['destinationcountry'] = destination_country
+        if origin_region:
+            opts['originregion'] = origin_region
+        if destination_region:
+            opts['destinationregion'] = destination_region
 
         resp = self.request('GET',
-                            sabre_endpoints['city_pairs_lookup'],
-                            {
-                                'pointofsalecountry': point_of_sale,
-                                'country': country
-                            })
+                            sabre_endpoints[endpoint],
+                            opts)
+
         return resp
