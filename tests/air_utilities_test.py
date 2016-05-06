@@ -65,5 +65,33 @@ class TestAirUtilities(unittest.TestCase):
         self.assertTrue('United Kingdom' in origin_names)
         self.assertTrue('United Kingdom' in destination_names)
 
+    def test_city_pairs_lookup(self):
+        # SHOP
+        # Country -> Country
+        res = self.sds.city_pairs_lookup('shop', origin_country='US',
+                                         destination_country='CA')
+        locations = res.origin_destination_locations
+        pairs = map(lambda l: l.origin_destination_locations, locations)
+
+        self.assertTrue('JFK-YYZ' in pairs)
+
+        # HISTORICAL
+        # Region -> Region
+        res = self.sds.city_pairs_lookup('shop', origin_region='North America',
+                                         destination_region='Latin America')
+        locations = res.origin_destination_locations
+        pairs = map(lambda l: l.origin_destination_locations, locations)
+
+        self.assertTrue('ATL-CUN' in pairs)
+
+        # FORECAST
+        # Country -> Region
+        res = self.sds.city_pairs_lookup('shop', origin_country='US',
+                                         destination_region='Europe')
+        locations = res.origin_destination_locations
+        pairs = map(lambda l: l.origin_destination_locations, locations)
+
+        self.assertTrue('SFO-LHR' in pairs)
+
 if __name__ == '__main__':
     unittest.main()
