@@ -96,7 +96,7 @@ class SabreDevStudio(object):
         return data
 
     # request
-    # String -> String -> Dictionary -> (ResponseData or dict)
+    # String -> String -> Dictionary? -> Dictionary? -> (ResponseData or dict)
     # The generic request function -- all API requests go through here
     # Should be called by a higher-level wrapper like instaflights(...)
     #    method is a String, 'GET', 'PUT', 'PATCH', 'POST', or 'DELETE'
