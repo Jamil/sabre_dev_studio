@@ -214,7 +214,8 @@ class SabreDevStudio(object):
         return resp
 
     # lead_price
-    # String -> String -> [Number] -> ResponseData 
+    # String -> String -> [Number] -> String? -> Date? -> Number? ->
+    #    Number? -> ResponseData 
     # Executes a request to Sabre's "Lead Price" endpoint with the arguments specified
     # Gives the cheapest dates and fare for the specified origin, destination
     # and length of stay
