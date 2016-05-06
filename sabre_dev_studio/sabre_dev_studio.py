@@ -266,7 +266,6 @@ class SabreDevStudio(object):
 
 
     # destination_finder
-    # String -> String -> [Number] -> ResponseData 
     # Executes a request to Sabre's "Lead Price" endpoint with the arguments specified
     # Gives the cheapest dates and fare for the specified origin, destination
     # and length of stay
