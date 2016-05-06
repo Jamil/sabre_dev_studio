@@ -336,7 +336,8 @@ class SabreDevStudio(object):
         return resp
 
     # top_destinations
-    # Dictionary -> ResponseData 
+    # String -> String? -> String? -> Int? ->
+    #    String? -> String? -> Int? -> ResponseData 
     # Executes a request to Sabre's "Top Destinations" endpoint with the 
     # options specified. Returns most popular destinations based on the params.
     # origin is 2 characters => interpreted as country
@@ -454,7 +455,7 @@ class SabreDevStudio(object):
         return resp
 
     # city_pairs_lookup
-    # String -> ResponseData
+    # String -> String? -> String? -> String? -> String? -> String? -> ResponseData
     # Returns the valid origin/destination city pairs for
     # a given point of sale & country
     def city_pairs_lookup(self, endpoint, point_of_sale=None, origin_country=None,
